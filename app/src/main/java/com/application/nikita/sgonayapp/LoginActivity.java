@@ -20,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().setTitle(R.string.title_activity_login);
 
         mLoginText = (EditText)findViewById(R.id.login_text);
         mPasswordText = (EditText) findViewById(R.id.password_text);
@@ -28,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
             }
         });
     }
