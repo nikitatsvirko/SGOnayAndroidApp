@@ -1,7 +1,10 @@
 package com.application.nikita.sgonayapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -26,5 +29,13 @@ public class GamesActivity extends AppCompatActivity {
         mAdapter = new ArrayAdapter<String>(this, R.layout.games_list_item, mGames);
 
         mGamesList.setAdapter(mAdapter);
+
+        mGamesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(GamesActivity.this, TasksActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

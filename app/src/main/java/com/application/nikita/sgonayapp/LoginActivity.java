@@ -1,10 +1,12 @@
 package com.application.nikita.sgonayapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Created by Nikita on 06.03.2017.
@@ -15,6 +17,8 @@ public class LoginActivity extends AppCompatActivity {
     private static EditText mLoginText;
     private static EditText mPasswordText;
     private static Button mSignInButton;
+    private static String mDummyLogin = "admin";
+    private static String mDummyPassword = "admin";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,8 +33,15 @@ public class LoginActivity extends AppCompatActivity {
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (mLoginText.getText().toString().equals(mDummyLogin) && mPasswordText.getText().toString().equals(mDummyPassword)) {
+                    Intent intent = new Intent(LoginActivity.this, GamesActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(LoginActivity.this, R.string.wrong_login_or_password, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+
+
 }
