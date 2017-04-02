@@ -23,7 +23,7 @@ public class GameAdapter extends BaseAdapter {
     ArrayList<Game> games;
     LayoutInflater inflater;
 
-    GameAdapter(Context context, ArrayList<Game> games){
+    public GameAdapter(Context context, ArrayList<Game> games){
         this.context = context;
         this.games = games;
         this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -56,7 +56,7 @@ public class GameAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.gameName)).setText(g.getName());
         ((TextView) view.findViewById(R.id.gameDate)).setText(g.getDate());
         ((TextView) view.findViewById(R.id.gameTimeOut)).setText(g.getTimeOut());
-        ((ImageView) view.findViewById(R.id.gameImage)).setImageResource(g.getImage());
+        //((ImageView) view.findViewById(R.id.gameImage)).setImageResource(g.getImage());
 
         return view;
     }

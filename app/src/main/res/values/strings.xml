@@ -9,4 +9,7 @@
     <string name="prompt_login">Название команды</string>
     <string name="prompt_password">Пароль</string>
     <string name="button_sign_in">Вход</string>
+    <string name="prompt_answer">Answer</string>
+    <string name="button_answer">Submit</string>
+    <string name="title_answer">Answer</string>
 </resources>

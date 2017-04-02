@@ -33,6 +33,11 @@
             android:name=".activities.GamesActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:label="@string/title_answer"
+            android:name=".activities.AnswerActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

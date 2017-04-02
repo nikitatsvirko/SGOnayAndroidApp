@@ -10,7 +10,7 @@ public class Task {
     String text;
     int image;
 
-    Task(int id, String text, int image){
+    public Task(int id, String text, int image){
         this.id = id;
         this.title = text.substring(0, 30);
         this.text = text;

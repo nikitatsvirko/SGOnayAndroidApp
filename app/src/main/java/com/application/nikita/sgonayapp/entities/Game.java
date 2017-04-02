@@ -10,7 +10,7 @@ public class Game {
     String timeOut;
     int image;      // why int ???
 
-    Game(String name, String date, String timeOut, int image){
+    public Game(String name, String date, String timeOut, int image){
         this.name = name;
         this.date = date;
         this.timeOut = timeOut;
