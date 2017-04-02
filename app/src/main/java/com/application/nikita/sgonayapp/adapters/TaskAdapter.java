@@ -22,7 +22,7 @@ public class TaskAdapter extends BaseAdapter {
     ArrayList<Task> tasks;
     LayoutInflater inflater;
 
-    TaskAdapter(Context context, ArrayList<Task> tasks){
+    public TaskAdapter(Context context, ArrayList<Task> tasks){
         this.context = context;
         this.tasks = tasks;
         this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -52,9 +52,8 @@ public class TaskAdapter extends BaseAdapter {
         }
 
         Task t = getTask(position);
-
-        ((TextView) view.findViewById(R.id.gameName)).setText(t.getId());
-        ((TextView) view.findViewById(R.id.gameDate)).setText(t.getTitle());
+        ((TextView) view.findViewById(R.id.taskId)).setText(String.valueOf(t.getId()));
+        ((TextView) view.findViewById(R.id.taskTitle)).setText(t.getTitle());
 
         return view;
     }
