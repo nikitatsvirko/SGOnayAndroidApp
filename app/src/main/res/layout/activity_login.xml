@@ -26,6 +26,7 @@
 
     <Button
         android:id="@+id/signin_button"
+        android:onClick="onClicked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
