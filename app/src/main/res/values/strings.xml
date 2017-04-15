@@ -12,4 +12,5 @@
     <string name="prompt_answer">Answer</string>
     <string name="button_answer">Submit</string>
     <string name="title_answer">Answer</string>
+    <string name="signup_text">Нет аккаунта? Создать новый</string>
 </resources>
