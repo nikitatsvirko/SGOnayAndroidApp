@@ -30,16 +30,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().setTitle(R.string.title_activity_login);
-
+        mLoginText = (EditText)findViewById(R.id.login_text);
+        mPasswordText = (EditText) findViewById(R.id.password_text);
+        mSignInButton = (Button) findViewById(R.id.signin_button);
         mSignUpTextView = (TextView)findViewById(R.id.link_signup);
+
         mSignUpTextView.setClickable(true);
         mSignUpTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    public void onClicked(View view) {
-        mLoginText = (EditText)findViewById(R.id.login_text);
-        mPasswordText = (EditText) findViewById(R.id.password_text);
-        mSignInButton = (Button) findViewById(R.id.signin_button);
+    public void logIn(View view) {
 
         if (mLoginText.getText().toString().equals(mDummyLogin) && mPasswordText.getText().toString().equals(mDummyPassword)) {
             Intent intent = new Intent(LoginActivity.this, GamesActivity.class);

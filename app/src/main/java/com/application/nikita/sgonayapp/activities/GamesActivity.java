@@ -32,7 +32,7 @@ public class GamesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_games);
 
         Game g1 = new Game("SGOnay #46", "Февраль-март 2017", "1 час 20 минут", 2);
-        Game g2 = new Game("SGOnay #47", "март-апрель 2017", "50 минут", 3);
+        Game g2 = new Game("SGOnay #47", "Март-апрель 2017", "50 минут", 3);
 
         mGames.add(g1);
         mGames.add(g2);
@@ -55,5 +55,4 @@ public class GamesActivity extends AppCompatActivity {
             }
         });
     }
-
 }

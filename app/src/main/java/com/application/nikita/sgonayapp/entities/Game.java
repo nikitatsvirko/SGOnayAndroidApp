@@ -26,12 +26,10 @@ public class Game {
     }
 
     public String getTimeOut() {
-
         return timeOut;
     }
 
     public String getDate() {
-
         return date;
     }
 
