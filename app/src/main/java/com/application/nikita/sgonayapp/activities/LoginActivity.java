@@ -3,9 +3,11 @@ package com.application.nikita.sgonayapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.application.nikita.sgonayapp.R;
@@ -21,12 +23,17 @@ public class LoginActivity extends AppCompatActivity {
     private static Button mSignInButton;
     private static String mDummyLogin = "admin";
     private static String mDummyPassword = "admin";
+    private static TextView mSignUpTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().setTitle(R.string.title_activity_login);
+
+        mSignUpTextView = (TextView)findViewById(R.id.link_signup);
+        mSignUpTextView.setClickable(true);
+        mSignUpTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     public void onClicked(View view) {

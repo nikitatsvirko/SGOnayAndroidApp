@@ -9,8 +9,9 @@
     <string name="prompt_login">Название команды</string>
     <string name="prompt_password">Пароль</string>
     <string name="button_sign_in">Вход</string>
-    <string name="prompt_answer">Answer</string>
-    <string name="button_answer">Submit</string>
-    <string name="title_answer">Answer</string>
-    <string name="signup_text">Нет аккаунта? Создать новый</string>
+    <string name="prompt_answer">Ответ</string>
+    <string name="button_answer">Подтвердить</string>
+    <string name="title_answer">Ответ</string>
+    <string name="signup_text"><a href="http://sgonay.96.lt/registration.php">Нет аккаунта? Создать новый</a></string>
+    <string name="image_content">SGOnay logo</string>
 </resources>

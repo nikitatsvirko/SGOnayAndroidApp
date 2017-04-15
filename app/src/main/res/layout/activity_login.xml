@@ -15,8 +15,8 @@
         android:layout_height="72dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="24dp"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:contentDescription="" />
+        android:contentDescription="@string/image_content"
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <EditText
         android:id="@+id/login_text"
@@ -53,8 +53,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:gravity="center"
         android:autoLink="web"
+        android:clickable="true"
+        android:gravity="center"
         android:text="@string/signup_text"
         android:textSize="16sp" />
 

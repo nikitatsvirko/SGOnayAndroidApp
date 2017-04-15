@@ -52,8 +52,8 @@ public class TaskAdapter extends BaseAdapter {
         }
 
         Task t = getTask(position);
-        ((TextView) view.findViewById(R.id.taskId)).setText(String.valueOf(t.getId()));
-        ((TextView) view.findViewById(R.id.taskTitle)).setText(t.getTitle());
+        ((TextView) view.findViewById(R.id.task_id)).setText(String.valueOf(t.getId()));
+        ((TextView) view.findViewById(R.id.task_title)).setText(t.getTitle());
 
         return view;
     }
