@@ -3,7 +3,8 @@
     <string name="title_activity_login">Вход</string>
     <string name="title_activity_tasks">Задания</string>
     <string name="title_activity_games">Доступные игры</string>
-    <string name="wrong_login_or_password">Неверное название команды или пароль!</string>
+    <string name="empty_forms">Введите название команды и пароль</string>
+    <string name="wrong_credentials">Неверные данные!</string>
 
     <!-- Strings related to login -->
     <string name="prompt_login">Название команды</string>
