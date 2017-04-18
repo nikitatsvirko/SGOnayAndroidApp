@@ -3,16 +3,19 @@ package com.application.nikita.sgonayapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.application.nikita.sgonayapp.R;
 import com.application.nikita.sgonayapp.adapters.GameAdapter;
 import com.application.nikita.sgonayapp.entities.Game;
+import com.application.nikita.sgonayapp.helper.SQLiteHandler;
+import com.application.nikita.sgonayapp.helper.SessionManager;
 
 import java.util.ArrayList;
 
@@ -22,8 +25,11 @@ import java.util.ArrayList;
 
 public class GamesActivity extends AppCompatActivity {
 
-    static ListView mGamesList;
-    static GameAdapter mAdapter;
+    private  ListView mGamesList;
+    private  GameAdapter mAdapter;
+    private SessionManager mSession;
+    private SQLiteHandler db;
+
     ArrayList<Game> mGames = new ArrayList<>();
 
     @Override
@@ -43,6 +49,9 @@ public class GamesActivity extends AppCompatActivity {
 
         mGamesList.setAdapter(mAdapter);
 
+        mSession = new SessionManager(getApplicationContext());
+        db = new SQLiteHandler(getApplicationContext());
+
         mGamesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -54,5 +63,26 @@ public class GamesActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_game, menu);
+        return true;
+    }
+
+    public void logOut(MenuItem item) {
+        if (mSession.isLoggedIn()) {
+            mSession.setLogin(false);
+            db.deleteUsers();
+
+            Intent intent = new Intent(GamesActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.not_logged_in , Toast.LENGTH_LONG).show();
+        }
+
     }
 }

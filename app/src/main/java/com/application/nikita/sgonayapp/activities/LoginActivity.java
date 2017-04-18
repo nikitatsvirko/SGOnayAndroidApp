@@ -26,6 +26,8 @@ import com.application.nikita.sgonayapp.helper.SessionManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 /**
  * Created by Nikita on 06.03.2017.
  */
@@ -60,11 +62,11 @@ public class LoginActivity extends AppCompatActivity {
 
         mSession = new SessionManager(getApplicationContext());
 
-        if (mSession.isLoggedIn()) {
+       if (mSession.isLoggedIn()) {
             Intent intent = new Intent(LoginActivity.this, GamesActivity.class);
             startActivity(intent);
             finish();
-        }
+       }
     }
 
     public void logIn(View view) {
