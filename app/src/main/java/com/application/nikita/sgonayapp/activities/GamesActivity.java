@@ -57,9 +57,7 @@ public class GamesActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(GamesActivity.this, TasksActivity.class);
                 startActivity(intent);
-                String string = mGames.get(position).getName();
-                Toast.makeText(getApplicationContext(), string, Toast.LENGTH_SHORT).show();
-
+                //String string = mGames.get(position).getName();
             }
         });
     }

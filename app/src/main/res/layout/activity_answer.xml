@@ -33,6 +33,7 @@
         android:background="@color/colorPrimary"
         android:onClick="onClicked"
         android:padding="10dp"
-        android:text="@string/button_answer" />
+        android:text="@string/button_answer"
+        android:textColor="@android:color/background_light" />
 
 </LinearLayout>

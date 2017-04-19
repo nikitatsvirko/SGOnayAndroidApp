@@ -2,6 +2,7 @@ package com.application.nikita.sgonayapp.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
@@ -71,14 +72,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void logIn(View view) {
-        String team = null;
-        String password = null;
-        try {
-            team = URLEncoder.encode(mLoginText.getText().toString().trim(), "utf-8");
-            password = URLEncoder.encode(mPasswordText.getText().toString().trim(), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String team = mLoginText.getText().toString().trim();
+        String password = mPasswordText.getText().toString().trim();
 
         if (!team.isEmpty() && !password.isEmpty()) {
             checkLogin(team, password);
@@ -94,9 +89,10 @@ public class LoginActivity extends AppCompatActivity {
         mProgressDialog.setMessage(getString(R.string.waiting_text));
         showDialog();
 
-        final String requestURL = String.format(AppConfig.URL_LOGIN, "\"Login\":\"" + team + "\"," +
-                "" +
-                "\"Password\":\"" + password + "\"");
+        final String requestBody = Uri.encode("\"Login\":\"" + team + "\"," +
+                "\"Password\":\"" + password + "\"", AppConfig.ALLOWED_URI_CHARS);
+
+        final String requestURL = String.format(AppConfig.URL_LOGIN, requestBody);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 requestURL, null,

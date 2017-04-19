@@ -6,12 +6,12 @@ package com.application.nikita.sgonayapp.entities;
 
 public class Task {
 
-    private int id;
+    private String id;
     private String description;
     private String text;
     private int image;
 
-    public Task(int id, String description, String text){
+    public Task(String id, String description, String text){
         this.id = id;
         this.description = description;
         this.text = text;
@@ -31,7 +31,7 @@ public class Task {
         return description;
     }
 
-    public int getId() {
+    public String getId() {
 
         return id;
     }

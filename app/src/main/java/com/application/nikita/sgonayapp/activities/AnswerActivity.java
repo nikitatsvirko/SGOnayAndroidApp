@@ -15,7 +15,7 @@ import com.application.nikita.sgonayapp.entities.Task;
 
 public class AnswerActivity extends AppCompatActivity {
 
-    static Task task;
+    private static Task task;
 
     public static void setTask(Task task) {
         AnswerActivity.task = task;

@@ -2,6 +2,7 @@ package com.application.nikita.sgonayapp.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,8 +23,14 @@ import com.application.nikita.sgonayapp.app.AppConfig;
 import com.application.nikita.sgonayapp.app.AppController;
 import com.application.nikita.sgonayapp.entities.Task;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class TasksActivity extends AppCompatActivity {
@@ -32,16 +39,8 @@ public class TasksActivity extends AppCompatActivity {
     private TaskAdapter mAdapter;
     private ArrayList<Task> mTasks = new ArrayList<>();
     private ProgressDialog mProgressDialog;
-    private String gameNumber = "#54";
-
-    String txt1 ="ул. Петра Глебки, 5\nТорговый центр «Скала». " +
-            "Поляна сказок в парке Тивали к северо-востоку от здания.";
-    String taskText1 = "Кто сопровождает старика?";
-    String txt2 = "В месте, указанном на карте, находится своеобразный \"мост\" через реку";
-    String taskText2 = "Количество цилиндрических плит, расположенных на воде.";
-    String txt3 = "просп. Независимости, 44.\n" +
-                    "Заведение с китайскими мотивами во дворе здания.";
-    String taskText3 = "Кто повис на дереве?";
+    private String gameNumber = "54";
+    private int countOfTasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +48,9 @@ public class TasksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tasks);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
-
-        Task t1 = new Task(1, txt1, taskText1);
-        Task t2 = new Task(2, txt2, taskText2);
-        Task t3 = new Task(3, txt3, taskText3);
-
-        mTasks.add(t1);
-        mTasks.add(t2);
-        mTasks.add(t3);
-
         mTasksList = (ListView) findViewById(R.id.tasks_list);
 
-        mAdapter = new TaskAdapter(this, mTasks);
-
-        mTasksList.setAdapter(mAdapter);
+        loadTasks();
 
         mTasksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -72,20 +60,17 @@ public class TasksActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(TasksActivity.this, AnswerActivity.class);
                 startActivity(intent);
-
-                String string = "" + mTasks.get(position).getId();
-                Toast.makeText(getApplicationContext(), string, Toast.LENGTH_SHORT).show();
             }
         });
-
-        loadTasks();
     }
 
     public void loadTasks() {
-        mProgressDialog.setMessage("Загрузка заданий...");
+        mProgressDialog.setMessage(getString(R.string.waiting_tasks_text));
         showDialog();
 
-        final String requestURL = String.format(AppConfig.URL_GET_TASKS, ("\"game\":\"" + gameNumber + "\""));
+        String requestBody = Uri.encode("\"game\":\"" + gameNumber + "\"", AppConfig.ALLOWED_URI_CHARS);
+
+        final String requestURL = String.format(AppConfig.URL_GET_TASKS, requestBody);
         Log.d(TAG, "Requset url: " + requestURL);
 
         JsonObjectRequest tasksRequest = new JsonObjectRequest(Request.Method.GET,
@@ -93,8 +78,30 @@ public class TasksActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "JSON response" + response.toString());
+                        try {
+                            JSONObject responseObject = response.getJSONObject("response");
+                            JSONArray jsonArray = responseObject.getJSONArray("retParameter");
+                            countOfTasks = jsonArray.length();
+
+                            for(int i = 0; i < countOfTasks; i++) {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                mTasks.add(new Task(object.getString("Number"),
+                                            object.getString("Description"),
+                                            object.getString("Task")));
+                                Log.d(TAG, "Number: " + object.getString("Number"));
+                                Log.d(TAG, "Description: " + object.getString("Description"));
+                                Log.d(TAG, "Task: " + object.getString("Task"));
+                            }
+
+                            mAdapter = new TaskAdapter(getApplicationContext(), mTasks);
+                            mTasksList.setAdapter(mAdapter);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                         hideDialog();
+
                     }
                 }, new Response.ErrorListener() {
             @Override

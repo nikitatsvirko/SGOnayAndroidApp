@@ -18,4 +18,5 @@
     <string name="image_content">SGOnay logo</string>
     <string name="exit_text">Выйти</string>
     <string name="waiting_text">Ожидайте...</string>
+    <string name="waiting_tasks_text">Загрузка заданий...</string>
 </resources>
