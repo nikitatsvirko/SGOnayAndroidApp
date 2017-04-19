@@ -26,7 +26,8 @@ import com.application.nikita.sgonayapp.helper.SessionManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Created by Nikita on 06.03.2017.
@@ -70,8 +71,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void logIn(View view) {
-        String team = mLoginText.getText().toString().trim();
-        String password = mPasswordText.getText().toString().trim();
+        String team = null;
+        String password = null;
+        try {
+            team = URLEncoder.encode(mLoginText.getText().toString().trim(), "utf-8");
+            password = URLEncoder.encode(mPasswordText.getText().toString().trim(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         if (!team.isEmpty() && !password.isEmpty()) {
             checkLogin(team, password);
@@ -84,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
     private void checkLogin(final String team, final String password) {
         String tagJsonRequest  = "req_login";
 
-        mProgressDialog.setMessage("Ожидайте...");
+        mProgressDialog.setMessage(getString(R.string.waiting_text));
         showDialog();
 
         final String requestURL = String.format(AppConfig.URL_LOGIN, "\"Login\":\"" + team + "\"," +

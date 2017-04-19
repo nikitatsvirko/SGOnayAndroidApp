@@ -25,12 +25,11 @@ import java.util.ArrayList;
 
 public class GamesActivity extends AppCompatActivity {
 
-    private  ListView mGamesList;
-    private  GameAdapter mAdapter;
+    private ListView mGamesList;
+    private GameAdapter mAdapter;
     private SessionManager mSession;
     private SQLiteHandler db;
-
-    ArrayList<Game> mGames = new ArrayList<>();
+    private ArrayList<Game> mGames = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle onSavedInstantState) {
@@ -83,6 +82,5 @@ public class GamesActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), R.string.not_logged_in , Toast.LENGTH_LONG).show();
         }
-
     }
 }

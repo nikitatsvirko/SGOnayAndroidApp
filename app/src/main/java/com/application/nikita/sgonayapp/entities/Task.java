@@ -5,16 +5,16 @@ package com.application.nikita.sgonayapp.entities;
  */
 
 public class Task {
-    int id;
-    String title;
-    String text;
-    int image;
 
-    public Task(int id, String text, int image){
+    private int id;
+    private String description;
+    private String text;
+    private int image;
+
+    public Task(int id, String description, String text){
         this.id = id;
-        this.title = text.substring(0, 30);
+        this.description = description;
         this.text = text;
-        this.image = image;
     }
 
     public int getImage() {
@@ -26,9 +26,9 @@ public class Task {
         return text;
     }
 
-    public String getTitle() {
+    public String getDescription() {
 
-        return title;
+        return description;
     }
 
     public int getId() {

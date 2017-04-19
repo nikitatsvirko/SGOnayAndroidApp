@@ -17,4 +17,5 @@
     <string name="signup_text"><a href="http://sgonay.96.lt/registration.php">Нет аккаунта? Создать новый</a></string>
     <string name="image_content">SGOnay logo</string>
     <string name="exit_text">Выйти</string>
+    <string name="waiting_text">Ожидайте...</string>
 </resources>

@@ -46,7 +46,8 @@
         android:background="@color/colorPrimaryDark"
         android:onClick="logIn"
         android:padding="12dp"
-        android:text="@string/button_sign_in" />
+        android:text="@string/button_sign_in"
+        android:textColor="@android:color/background_light" />
 
     <TextView
         android:id="@+id/link_signup"
