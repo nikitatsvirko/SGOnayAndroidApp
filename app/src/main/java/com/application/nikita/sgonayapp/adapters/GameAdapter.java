@@ -56,6 +56,8 @@ public class GameAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.gameName)).setText(g.getName());
         ((TextView) view.findViewById(R.id.gameDate)).setText(g.getDate());
         ((TextView) view.findViewById(R.id.gameTimeOut)).setText(g.getTimeOut());
+        ((TextView) view.findViewById(R.id.gameTitle)).setText(g.getTitle());
+        ((TextView) view.findViewById(R.id.gameScheme)).setText(g.getScheme());
         //((ImageView) view.findViewById(R.id.gameImage)).setImageResource(g.getImage());
 
         return view;
