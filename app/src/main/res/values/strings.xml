@@ -6,8 +6,6 @@
     <string name="empty_forms">Введите название команды и пароль</string>
     <string name="wrong_credentials">Неверные данные!</string>
     <string name="not_logged_in">Вы не вошли в систему</string>
-
-    <!-- Strings related to login -->
     <string name="prompt_login">Название команды</string>
     <string name="prompt_password">Пароль</string>
     <string name="button_sign_in">Вход</string>
@@ -19,4 +17,6 @@
     <string name="exit_text">Выйти</string>
     <string name="waiting_text">Ожидайте...</string>
     <string name="waiting_tasks_text">Загрузка заданий...</string>
+    <string name="finish_txt">Финишировать</string>
+    <string name="loading_txt">Загрузка...</string>
 </resources>

@@ -19,7 +19,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.application.nikita.sgonayapp.R;
-import com.application.nikita.sgonayapp.app.AppConfig;
 import com.application.nikita.sgonayapp.app.AppController;
 import com.application.nikita.sgonayapp.helper.SQLiteHandler;
 import com.application.nikita.sgonayapp.helper.SessionManager;
@@ -27,8 +26,7 @@ import com.application.nikita.sgonayapp.helper.SessionManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import static com.application.nikita.sgonayapp.app.AppConfig.*;
 
 /**
  * Created by Nikita on 06.03.2017.
@@ -84,15 +82,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkLogin(final String team, final String password) {
-        String tagJsonRequest  = "req_login";
-
         mProgressDialog.setMessage(getString(R.string.waiting_text));
         showDialog();
 
         final String requestBody = Uri.encode("\"Login\":\"" + team + "\"," +
-                "\"Password\":\"" + password + "\"", AppConfig.ALLOWED_URI_CHARS);
-
-        final String requestURL = String.format(AppConfig.URL_LOGIN, requestBody);
+                "\"Password\":\"" + password + "\"", ALLOWED_URI_CHARS);
+        final String requestURL = String.format(URL_LOGIN, requestBody);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 requestURL, null,
@@ -102,23 +97,10 @@ public class LoginActivity extends AppCompatActivity {
                         hideDialog();
 
                         try {
-                            JSONObject responseObject = response.getJSONObject("response");
-                            String retParameter = responseObject.getString("retParameter");
+                            JSONObject responseObject = response.getJSONObject(RESPONSE_STRING);
+                            String retParameter = responseObject.getString(RETURN_PARAMETER_STRING);
 
-                            if (!retParameter.contains("false")) {
-
-                                mSession.setLogin(true);
-
-                                db.addUser(team, retParameter);
-
-                                Intent intent = new Intent(LoginActivity.this, GamesActivity.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                Toast.makeText(getApplicationContext(), R.string.wrong_credentials,
-                                        Toast.LENGTH_LONG).show();
-                            }
-
+                            setUserLoggedIn(retParameter, team);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d(TAG, "JSON error: " + e.getMessage());
@@ -133,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                 });
 
-        AppController.getInstance().addToRequestQueue(jsonObjectRequest, tagJsonRequest);
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
     private void showDialog() {
@@ -144,5 +126,21 @@ public class LoginActivity extends AppCompatActivity {
     private void hideDialog() {
         if (mProgressDialog.isShowing())
             mProgressDialog.dismiss();
+    }
+
+    private void setUserLoggedIn(String retParameter, String team) {
+        if (!retParameter.contains("false")) {
+
+            mSession.setLogin(true);
+
+            db.addUser(team, retParameter);
+
+            Intent intent = new Intent(LoginActivity.this, GamesActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.wrong_credentials,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 }

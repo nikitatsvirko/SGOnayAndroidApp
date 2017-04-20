@@ -15,7 +15,10 @@
         android:layout_marginTop="5dp"
         android:padding="10dp"
         android:text=""
-        android:textSize="20sp"></TextView>
+        android:textColor="@android:color/black"
+        android:textSize="20sp">
+
+    </TextView>
 
     <TextView
         android:id="@+id/gameDate"
@@ -24,7 +27,10 @@
         android:layout_gravity="end"
         android:layout_marginEnd="5dp"
         android:padding="10dp"
-        android:text=""></TextView>
+        android:text=""
+        android:textColor="@android:color/black">
+
+    </TextView>
 
     <TextView
         android:id="@+id/gameTimeOut"
@@ -33,7 +39,10 @@
         android:layout_gravity="end"
         android:layout_marginEnd="5dp"
         android:padding="10dp"
-        android:text=""></TextView>
+        android:text=""
+        android:textColor="@android:color/black">
+
+    </TextView>
 
     <ImageView
         android:id="@+id/gameImage"
@@ -41,7 +50,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="5dp"
-        android:contentDescription=""
+        android:contentDescription="@string/image_content"
         android:padding="10dp"
-        android:src="@mipmap/ic_launcher"></ImageView>
+        android:src="@mipmap/ic_launcher">
+
+    </ImageView>
 </LinearLayout>
