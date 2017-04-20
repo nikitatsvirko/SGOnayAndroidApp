@@ -7,21 +7,34 @@
         android:id="@+id/answer_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:layout_margin="5dp"
+        android:padding="10dp"
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/answer_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:hint="@string/prompt_answer"
         android:inputType="text"
-        android:padding="10dp"/>
+        android:maxLines="@integer/max_lines_text"
+        android:minLines="@integer/min_lines_text"
+        android:padding="10dp"
+        android:scrollbars="vertical" />
 
     <Button
         android:id="@+id/button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        android:background="@color/colorPrimary"
         android:onClick="onClicked"
-        android:text="@string/button_answer" />
+        android:padding="10dp"
+        android:text="@string/button_answer"
+        android:textColor="@android:color/background_light" />
 
 </LinearLayout>

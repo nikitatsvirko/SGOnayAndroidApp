@@ -3,13 +3,20 @@
     <string name="title_activity_login">Вход</string>
     <string name="title_activity_tasks">Задания</string>
     <string name="title_activity_games">Доступные игры</string>
-    <string name="wrong_login_or_password">Неверное название команды или пароль!</string>
-
-    <!-- Strings related to login -->
+    <string name="empty_forms">Введите название команды и пароль</string>
+    <string name="wrong_credentials">Неверные данные!</string>
+    <string name="not_logged_in">Вы не вошли в систему</string>
     <string name="prompt_login">Название команды</string>
     <string name="prompt_password">Пароль</string>
     <string name="button_sign_in">Вход</string>
-    <string name="prompt_answer">Answer</string>
-    <string name="button_answer">Submit</string>
-    <string name="title_answer">Answer</string>
+    <string name="prompt_answer">Ответ</string>
+    <string name="button_answer">Подтвердить</string>
+    <string name="title_answer">Ответ</string>
+    <string name="signup_text"><a href="http://sgonay.96.lt/registration.php">Нет аккаунта? Создать новый</a></string>
+    <string name="image_content">SGOnay logo</string>
+    <string name="exit_text">Выйти</string>
+    <string name="waiting_text">Ожидайте...</string>
+    <string name="waiting_tasks_text">Загрузка заданий...</string>
+    <string name="finish_txt">Финишировать</string>
+    <string name="loading_txt">Загрузка...</string>
 </resources>

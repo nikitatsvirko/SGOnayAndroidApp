@@ -15,7 +15,7 @@ import com.application.nikita.sgonayapp.entities.Task;
 
 public class AnswerActivity extends AppCompatActivity {
 
-    static Task task;
+    private static Task task;
 
     public static void setTask(Task task) {
         AnswerActivity.task = task;
@@ -26,7 +26,7 @@ public class AnswerActivity extends AppCompatActivity {
         super.onCreate(onSavedInstantState);
         setContentView(R.layout.activity_answer);
 
-        String text = "" + task.getId() + ". " + task.getText();
+        String text = "" + task.getId() + ". " + task.getDescription() + ". " + task.getText();
 
         ((TextView) findViewById(R.id.answer_text_view)).setText(text);
 

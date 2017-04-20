@@ -1,52 +1,57 @@
 package com.application.nikita.sgonayapp.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.application.nikita.sgonayapp.R;
 import com.application.nikita.sgonayapp.adapters.TaskAdapter;
+import com.application.nikita.sgonayapp.app.AppController;
 import com.application.nikita.sgonayapp.entities.Task;
+import com.application.nikita.sgonayapp.helper.SQLiteHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.application.nikita.sgonayapp.app.AppConfig.*;
+
 public class TasksActivity extends AppCompatActivity {
-
-    static ListView mTasksList;
-    static TaskAdapter mAdapter;
-    ArrayList<Task> mTasks = new ArrayList<>();
-
-    String txt1 ="ул. Петра Глебки, 5\nТорговый центр «Скала». " +
-            "Поляна сказок в парке Тивали к северо-востоку от здания.\n Кто сопровождает старика?";
-    String txt2 = "В месте, указанном на карте, находится своеобразный \"мост\" через реку\n" +
-                    "Количество цилиндрических плит, расположенных на воде.";
-    String txt3 = "просп. Независимости, 44.\n" +
-                    "Заведение с китайскими мотивами во дворе здания.\n" +
-                    "Кто повис на дереве?";
+    private static final String TAG = TasksActivity.class.getSimpleName();
+    private ListView mTasksList;
+    private TaskAdapter mAdapter;
+    private ArrayList<Task> mTasks = new ArrayList<>();
+    private ProgressDialog mProgressDialog;
+    private String gameNumber = "54";
+    private int countOfTasks;
+    private SQLiteHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
-
-        Task t1 = new Task(1, txt1, 1);
-        Task t2 = new Task(2, txt2, 2);
-        Task t3 = new Task(3, txt3, 3);
-
-        mTasks.add(t1);
-        mTasks.add(t2);
-        mTasks.add(t3);
-
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
         mTasksList = (ListView) findViewById(R.id.tasks_list);
+        db = new SQLiteHandler(getApplicationContext());
 
-        mAdapter = new TaskAdapter(this, mTasks);
-
-        mTasksList.setAdapter(mAdapter);
+        loadTasks(gameNumber);
 
         mTasksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -56,11 +61,108 @@ public class TasksActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(TasksActivity.this, AnswerActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
 
-                String string = "" + mTasks.get(position).getId();
-                Toast.makeText(getApplicationContext(), string, Toast.LENGTH_SHORT).show();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_tasks, menu);
+        return true;
+    }
+
+    public void loadTasks(String number) {
+        mProgressDialog.setMessage(getString(R.string.waiting_tasks_text));
+        showDialog();
+
+        final String requestBody = Uri.encode("\"game\":\"" + number + "\"", ALLOWED_URI_CHARS);
+        final String requestURL = String.format(URL_GET_TASKS, requestBody);
+
+        JsonObjectRequest tasksRequest = new JsonObjectRequest(Request.Method.GET,
+                requestURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject responseObject = response.getJSONObject(RESPONSE_STRING);
+                            JSONArray jsonArray = responseObject.getJSONArray(RETURN_PARAMETER_STRING);
+
+                            putDataToAdapter(jsonArray);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        hideDialog();
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                hideDialog();
             }
         });
 
+        AppController.getInstance().addToRequestQueue(tasksRequest);
+    }
+
+    private void showDialog() {
+        if (!mProgressDialog.isShowing())
+            mProgressDialog.show();
+    }
+
+    private void hideDialog() {
+        if (mProgressDialog.isShowing())
+            mProgressDialog.dismiss();
+    }
+
+    private void putDataToAdapter(JSONArray array) throws JSONException {
+        countOfTasks = array.length();
+
+        for(int i = 0; i < countOfTasks; i++) {
+            JSONObject object = array.getJSONObject(i);
+            mTasks.add(new Task(object.getString("Number"),
+                    object.getString("Description"),
+                    object.getString("Task")));
+        }
+
+        mAdapter = new TaskAdapter(getApplicationContext(), mTasks);
+        mTasksList.setAdapter(mAdapter);
+    }
+
+    public void finishGame(MenuItem item) {
+        mProgressDialog.setMessage(getString(R.string.loading_txt));
+        showDialog();
+
+        final String requestBody = Uri.encode("\"game\":\"" + gameNumber + "\"Key\":\"" + getUid(db) + "\"", ALLOWED_URI_CHARS);
+        final String requestURL = String.format(URL_FINISH, requestBody);
+        Log.d(TAG, "URL: " + requestURL);
+
+        JsonObjectRequest tasksRequest = new JsonObjectRequest(Request.Method.GET,
+                requestURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject responseObject = response.getJSONObject(RESPONSE_STRING);
+                            boolean retParameter = responseObject.getBoolean(RETURN_PARAMETER_STRING);
+                            Log.d(TAG, "RESULT: " + retParameter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        hideDialog();
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                hideDialog();
+            }
+        });
+
+        AppController.getInstance().addToRequestQueue(tasksRequest);
     }
 }

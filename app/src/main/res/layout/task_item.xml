@@ -1,23 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="#2c3338"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@android:color/background_light"
+    android:padding="5dp" >
+
     <TextView
-        android:id="@+id/taskId"
+        android:id="@+id/task_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_alignBottom="@+id/task_description"
+        android:layout_alignLeft="@+id/task_text"
+        android:layout_alignStart="@+id/task_text"
+        android:layout_alignTop="@+id/task_description"
+        android:gravity="center"
+        android:padding="3dp"
         android:text=""
-        android:textSize="20sp">
-    </TextView>
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"></TextView>
+
     <TextView
-        android:id="@+id/taskTitle"
-        android:layout_width="wrap_content"
+        android:id="@+id/task_description"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginRight="10dp"
-        android:text="">
+        android:layout_alignParentEnd="true"
+        android:layout_margin="5dp"
+        android:layout_toEndOf="@id/task_id"
+        android:ellipsize="end"
+        android:gravity="start|center"
+        android:maxLines="3"
+        android:padding="5dp"
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textSize="16sp">
     </TextView>
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/task_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_below="@id/task_description" >
+    </TextView>
+
+</RelativeLayout>
