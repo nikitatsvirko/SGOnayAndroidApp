@@ -135,7 +135,7 @@ public class TasksActivity extends AppCompatActivity {
         mProgressDialog.setMessage(getString(R.string.loading_txt));
         showDialog();
 
-        final String requestBody = Uri.encode("\"game\":\"" + gameNumber + "\"Key\":\"" + getUid(db) + "\"", ALLOWED_URI_CHARS);
+        final String requestBody = Uri.encode("\"game\":\"" + gameNumber + "\",\"Key\":\"" + getUid(db) + "\"", ALLOWED_URI_CHARS);
         final String requestURL = String.format(URL_FINISH, requestBody);
         Log.d(TAG, "URL: " + requestURL);
 
@@ -147,7 +147,8 @@ public class TasksActivity extends AppCompatActivity {
                         try {
                             JSONObject responseObject = response.getJSONObject(RESPONSE_STRING);
                             boolean retParameter = responseObject.getBoolean(RETURN_PARAMETER_STRING);
-                            Log.d(TAG, "RESULT: " + retParameter);
+
+                            finishGame(retParameter);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -164,5 +165,12 @@ public class TasksActivity extends AppCompatActivity {
         });
 
         AppController.getInstance().addToRequestQueue(tasksRequest);
+    }
+
+    private void finishGame(boolean isFinished) {
+        if (isFinished) {
+            finish();
+            super.onBackPressed();
+        }
     }
 }
