@@ -5,60 +5,59 @@ package com.application.nikita.sgonayapp.entities;
  */
 
 public class Game {
-    String name;
-    String date;
-    String timeOut;
-    String title;
-    String scheme;
-    int image;
+    private String mNumber;
+    private String mDate;
+    private String mTimeOut;
+    private String mTitle;
+    private String mScheme;
+    private int mImage;
 
-    public Game(String name, String date, String timeOut, int image){
-        this.name = name;
-        this.date = date;
-        this.timeOut = timeOut;
-        this.image = image;
-        this.title = "";
-        this.scheme = "";
+    public Game(String number, String date, String timeOut, String scheme){
+        this.mNumber = number;
+        this.mDate = date;
+        this.mTimeOut = timeOut;
+        this.mTitle = "";
+        this.mScheme = "";
     }
 
-    public Game(String name, String date, String timeOut, int image, String title, String scheme){
-        this.name = name;
-        this.date = date;
-        this.timeOut = timeOut;
-        this.image = image;
-        this.title = title;
-        this.scheme = scheme;
+    public Game(String number, String date, String timeOut, int image, String title, String scheme){
+        this.mNumber = number;
+        this.mDate = date;
+        this.mTimeOut = timeOut;
+        this.mImage = image;
+        this.mTitle = title;
+        this.mScheme = scheme;
     }
 
-    public String getName() {
+    public String getNumber() {
 
-        return name;
+        return mNumber;
     }
 
     public int getImage() {
 
-        return image;
+        return mImage;
     }
 
     public String getTimeOut() {
 
-        return timeOut;
+        return mTimeOut;
     }
 
     public String getDate() {
 
-        return date;
+        return mDate;
     }
 
 
     public String getTitle() {
 
-        return title;
+        return mTitle;
     }
 
 
     public String getScheme() {
 
-        return scheme;
+        return mScheme;
     }
 }

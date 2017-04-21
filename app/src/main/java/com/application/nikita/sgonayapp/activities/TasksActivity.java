@@ -38,9 +38,10 @@ public class TasksActivity extends AppCompatActivity {
     private TaskAdapter mAdapter;
     private ArrayList<Task> mTasks = new ArrayList<>();
     private ProgressDialog mProgressDialog;
-    private String gameNumber = "54";
+    private String mGameNumber;
     private int countOfTasks;
     private SQLiteHandler db;
+    private boolean isFinished = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +51,16 @@ public class TasksActivity extends AppCompatActivity {
         mProgressDialog.setCancelable(false);
         mTasksList = (ListView) findViewById(R.id.tasks_list);
         db = new SQLiteHandler(getApplicationContext());
-
-        loadTasks(gameNumber);
+        mGameNumber = getIntent().getStringExtra("game_number");
+        loadTasks(mGameNumber);
 
         mTasksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                AnswerActivity.setTask(mTasks.get(position));
-
                 Intent intent = new Intent(TasksActivity.this, AnswerActivity.class);
+                intent.putExtra("id",mTasks.get(position).getId());
+                intent.putExtra("description",mTasks.get(position).getDescription());
+                intent.putExtra("text",mTasks.get(position).getText());
                 startActivity(intent);
             }
         });
@@ -123,7 +124,7 @@ public class TasksActivity extends AppCompatActivity {
         for(int i = 0; i < countOfTasks; i++) {
             JSONObject object = array.getJSONObject(i);
             mTasks.add(new Task(object.getString("Number"),
-                    object.getString("Description"),
+                    object.getString("Description").replaceAll("(?:<br>)", ""),
                     object.getString("Task")));
         }
 
@@ -135,7 +136,7 @@ public class TasksActivity extends AppCompatActivity {
         mProgressDialog.setMessage(getString(R.string.loading_txt));
         showDialog();
 
-        final String requestBody = Uri.encode("\"game\":\"" + gameNumber + "\",\"Key\":\"" + getUid(db) + "\"", ALLOWED_URI_CHARS);
+        final String requestBody = Uri.encode("\"game\":\"" + mGameNumber + "\",\"Key\":\"" + getUid(db) + "\"", ALLOWED_URI_CHARS);
         final String requestURL = String.format(URL_FINISH, requestBody);
         Log.d(TAG, "URL: " + requestURL);
 
@@ -146,9 +147,9 @@ public class TasksActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject responseObject = response.getJSONObject(RESPONSE_STRING);
-                            boolean retParameter = responseObject.getBoolean(RETURN_PARAMETER_STRING);
+                            isFinished = responseObject.getBoolean(RETURN_PARAMETER_STRING);
 
-                            finishGame(retParameter);
+                            finishGame(isFinished);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -173,4 +174,7 @@ public class TasksActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+    @Override
+    public void onBackPressed() {}
 }

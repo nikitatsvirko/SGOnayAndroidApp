@@ -1,20 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp"
+    android:padding="5dp">
 
     <TextView
-        android:id="@+id/answer_text_view"
-        android:layout_width="match_parent"
+        android:id="@+id/task_id_txt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:padding="10dp"
+        android:layout_alignBottom="@+id/task_description_txt"
+        android:layout_alignStart="@+id/task_text_txt"
+        android:layout_alignTop="@+id/task_description_txt"
+        android:gravity="center"
+        android:padding="3dp"
         android:text=""
         android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/task_description_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="5dp"
+        android:layout_toEndOf="@id/task_id_txt"
+        android:ellipsize="end"
+        android:gravity="start|center"
+        android:padding="5dp"
+        android:textColor="@android:color/black"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/task_text_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/task_description_txt"
+        android:layout_margin="5dp"
+        android:ellipsize="end"
+        android:padding="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="17sp" />
 
     <EditText
-        android:id="@+id/answer_text"
+        android:id="@+id/task_answer_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -23,12 +52,15 @@
         android:maxLines="@integer/max_lines_text"
         android:minLines="@integer/min_lines_text"
         android:padding="10dp"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:layout_below="@id/task_text_txt"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/submit_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/task_answer_txt"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_margin="5dp"
         android:background="@color/colorPrimary"
@@ -37,4 +69,4 @@
         android:text="@string/button_answer"
         android:textColor="@android:color/background_light" />
 
-</LinearLayout>
+</RelativeLayout>
