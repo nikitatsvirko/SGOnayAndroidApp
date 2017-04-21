@@ -19,7 +19,8 @@ public class AppConfig {
     public static final String ALLOWED_URI_CHARS = "\"@#&=*+-_.,:!?()/~'%";
     public static final String RESPONSE_STRING = "response";
     public static final String RETURN_PARAMETER_STRING = "retParameter";
-
+    public static final String SGONAY_TEXT = "SGOnay#";
+    public static final String MINUTES_TEXT = " мин.";
     public static String getUid(SQLiteHandler db) {
         Map<String, String> map = db.getUserDetails();
 

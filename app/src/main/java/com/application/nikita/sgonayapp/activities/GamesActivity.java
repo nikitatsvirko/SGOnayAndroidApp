@@ -156,6 +156,7 @@ public class GamesActivity extends AppCompatActivity {
             JSONObject object = array.getJSONObject(i);
             mGames.add(new Game(object.getString("Number"),
                     object.getString("Title"),
+                    object.getString("Timeout"),
                     object.getString("Date"),
                     object.getString("Scheme")));
         }

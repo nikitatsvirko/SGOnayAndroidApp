@@ -8,9 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.application.nikita.sgonayapp.R;
-import com.application.nikita.sgonayapp.entities.Task;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by Konstantin on 02.04.2017.

@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.application.nikita.sgonayapp.entities.Game;
 import com.application.nikita.sgonayapp.R;
+import com.application.nikita.sgonayapp.entities.Game;
+import static com.application.nikita.sgonayapp.app.AppConfig.*;
 
 import java.util.ArrayList;
 
@@ -53,9 +53,9 @@ public class GameAdapter extends BaseAdapter {
 
         Game g = getGame(position);
 
-        ((TextView) view.findViewById(R.id.gameName)).setText(g.getNumber());
+        ((TextView) view.findViewById(R.id.gameName)).setText(SGONAY_TEXT + g.getNumber());
         ((TextView) view.findViewById(R.id.gameDate)).setText(g.getDate());
-        ((TextView) view.findViewById(R.id.gameTimeOut)).setText(g.getTimeOut());
+        ((TextView) view.findViewById(R.id.gameTimeOut)).setText(g.getTimeOut() + MINUTES_TEXT);
         ((TextView) view.findViewById(R.id.gameTitle)).setText(g.getTitle());
 
         return view;
