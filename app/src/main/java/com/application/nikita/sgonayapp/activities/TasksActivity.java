@@ -59,8 +59,11 @@ public class TasksActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(TasksActivity.this, AnswerActivity.class);
                 intent.putExtra("id",mTasks.get(position).getId());
+                intent.putExtra("price", mTasks.get(position).getCost());
                 intent.putExtra("description",mTasks.get(position).getDescription());
                 intent.putExtra("text",mTasks.get(position).getText());
+                intent.putExtra("scheme", getIntent().getStringExtra("scheme"));
+                intent.putExtra("game_number", getIntent().getStringExtra("game_number"));
                 startActivity(intent);
             }
         });
@@ -125,7 +128,8 @@ public class TasksActivity extends AppCompatActivity {
             JSONObject object = array.getJSONObject(i);
             mTasks.add(new Task(object.getString("Number"),
                     object.getString("Description").replaceAll("(?:<br>)", ""),
-                    object.getString("Task")));
+                    object.getString("Task"),
+                    object.getString("Price")));
         }
 
         mAdapter = new TaskAdapter(getApplicationContext(), mTasks);
@@ -177,4 +181,9 @@ public class TasksActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {}
+
+    public void refreshOnClick(MenuItem item) {
+        mTasks.clear();
+        loadTasks(mGameNumber);
+    }
 }

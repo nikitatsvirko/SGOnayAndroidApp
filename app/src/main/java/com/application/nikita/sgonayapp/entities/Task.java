@@ -9,17 +9,17 @@ public class Task {
     private String id;
     private String description;
     private String text;
-    private Integer cost;
+    private String cost;
     private int image;
 
     public Task(String id, String description, String text){
         this.id = id;
         this.description = description;
         this.text = text;
-        this.cost = -1;
+        this.cost = "";
     }
 
-    public Task(String id, String description, String text, Integer cost){
+    public Task(String id, String description, String text, String cost){
         this.id = id;
         this.description = description;
         this.text = text;
@@ -46,7 +46,7 @@ public class Task {
         return id;
     }
 
-    public Integer getCost() {
+    public String getCost() {
 
         return cost;
     }

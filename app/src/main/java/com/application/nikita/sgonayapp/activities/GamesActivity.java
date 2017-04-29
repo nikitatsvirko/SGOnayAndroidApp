@@ -1,10 +1,15 @@
 package com.application.nikita.sgonayapp.activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,8 +41,11 @@ import java.util.ArrayList;
 import static com.application.nikita.sgonayapp.app.AppConfig.ALLOWED_URI_CHARS;
 import static com.application.nikita.sgonayapp.app.AppConfig.RESPONSE_STRING;
 import static com.application.nikita.sgonayapp.app.AppConfig.RETURN_PARAMETER_STRING;
+import static com.application.nikita.sgonayapp.app.AppConfig.URL_FINISH;
 import static com.application.nikita.sgonayapp.app.AppConfig.URL_GET_GAMES;
 import static com.application.nikita.sgonayapp.app.AppConfig.URL_GET_TASKS;
+import static com.application.nikita.sgonayapp.app.AppConfig.URL_START_GAME;
+import static com.application.nikita.sgonayapp.app.AppConfig.getUid;
 
 /**
  * Created by Nikita on 07.03.2017.
@@ -53,6 +61,7 @@ public class GamesActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
 
     private ArrayList<Game> mGames = new ArrayList<>();
+    private boolean isStarted;
 
     @Override
     public void onCreate(Bundle onSavedInstantState) {
@@ -64,22 +73,12 @@ public class GamesActivity extends AppCompatActivity {
         mSession = new SessionManager(getApplicationContext());
         db = new SQLiteHandler(getApplicationContext());
 
-        /*  Game g1 = new Game("SGOnay #46", "Февраль-март 2017", "1 час 20 минут", "2");
-        Game g2 = new Game("SGOnay #47", "Март-апрель 2017", "50 минут", "3");
-
-        mGames.add(g1);
-        mGames.add(g2);*/
-
         loadGames();
 
         mGamesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent intent = new Intent(GamesActivity.this, TasksActivity.class);
-                intent.putExtra("game_number", mGames.get(position).getNumber());
-                startActivity(intent);
-
+            showStartDialog(position);
             }
         });
     }
@@ -105,7 +104,7 @@ public class GamesActivity extends AppCompatActivity {
     }
 
     public void loadGames() {
-        mProgressDialog.setMessage(getString(R.string.waiting_tasks_text));
+        mProgressDialog.setMessage(getString(R.string.waiting_games_text));
         showDialog();
 
 
@@ -163,5 +162,69 @@ public class GamesActivity extends AppCompatActivity {
 
         mAdapter = new GameAdapter(getApplicationContext(), mGames);
         mGamesList.setAdapter(mAdapter);
+    }
+
+    public void refreshOnClick(MenuItem item) {
+        mGames.clear();
+        loadGames();
+    }
+
+    public void showStartDialog(final int position) {
+
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(GamesActivity.this);
+        builder.setTitle(R.string.start_game_title);
+        builder.setMessage(getString(R.string.start_game_message));
+        builder.setPositiveButton(R.string.start_text,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startGame(mGames.get(position).getNumber());
+
+                        Intent intent = new Intent(GamesActivity.this, TasksActivity.class);
+                        intent.putExtra("game_number", mGames.get(position).getNumber());
+                        intent.putExtra("scheme", mGames.get(position).getScheme());
+                        startActivity(intent);
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void startGame(String mGameNumber) {
+        mProgressDialog.setMessage(getString(R.string.loading_txt));
+        showDialog();
+
+        final String requestBody = Uri.encode("\"game\":\"" + mGameNumber + "\",\"Key\":\"" + getUid(db) + "\"", ALLOWED_URI_CHARS);
+        final String requestURL = String.format(URL_START_GAME, requestBody);
+        Log.d(TAG, "URL: " + requestURL);
+
+        JsonObjectRequest tasksRequest = new JsonObjectRequest(Request.Method.GET,
+                requestURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject responseObject = response.getJSONObject(RESPONSE_STRING);
+                            isStarted = responseObject.getBoolean(RETURN_PARAMETER_STRING);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        hideDialog();
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                hideDialog();
+            }
+        });
+
+        AppController.getInstance().addToRequestQueue(tasksRequest);
     }
 }

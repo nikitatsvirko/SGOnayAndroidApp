@@ -55,7 +55,11 @@ public class GameAdapter extends BaseAdapter {
 
         ((TextView) view.findViewById(R.id.gameName)).setText(SGONAY_TEXT + g.getNumber());
         ((TextView) view.findViewById(R.id.gameDate)).setText(g.getDate());
-        ((TextView) view.findViewById(R.id.gameTimeOut)).setText(g.getTimeOut() + MINUTES_TEXT);
+        if (g.getScheme().equals("3")) {
+            ((TextView) view.findViewById(R.id.gameTimeOut)).setText("");
+        } else {
+            ((TextView) view.findViewById(R.id.gameTimeOut)).setText(g.getTimeOut() + MINUTES_TEXT);
+        }
         ((TextView) view.findViewById(R.id.gameTitle)).setText(g.getTitle());
 
         return view;

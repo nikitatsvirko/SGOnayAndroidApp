@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SGOnayApp</string>
+    <string name="app_name">SGOnay</string>
     <string name="title_activity_login">Вход</string>
     <string name="title_activity_tasks">Задания</string>
     <string name="title_activity_games">Доступные игры</string>
@@ -19,4 +19,13 @@
     <string name="waiting_tasks_text">Загрузка заданий...</string>
     <string name="finish_txt">Финишировать</string>
     <string name="loading_txt">Загрузка...</string>
+    <string name="refresh">Обновить</string>
+    <string name="no_answer">Вы не ввели ответ!</string>
+    <string name="waiting_games_text">Загрузка игр...</string>
+    <string name="waiting_sending_answers_text">Отправка ответа...</string>
+    <string name="answer_false_txt">Возможно вы финишировали или время кончилось</string>
+    <string name="start_game_message">Вы уверены, что хотите стартовать в игре?</string>
+    <string name="start_text">Да</string>
+    <string name="start_game_title">Старт</string>
+    <string name="points_text">Очки: </string>
 </resources>
