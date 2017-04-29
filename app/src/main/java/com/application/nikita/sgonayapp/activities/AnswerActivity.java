@@ -68,7 +68,8 @@ public class AnswerActivity extends AppCompatActivity {
         String answer = mAnswer.getText().toString().trim();
 
         if (!answer.isEmpty()) {
-            sendAnswer(mAnswer.getText().toString().trim());
+            sendAnswer(answer);
+            finish();
         } else {
             Toast.makeText(getApplicationContext(), R.string.no_answer, Toast.LENGTH_SHORT).show();
         }
@@ -120,12 +121,16 @@ public class AnswerActivity extends AppCompatActivity {
         mProgressDialog.setMessage(getString(R.string.waiting_sending_answers_text));
         showDialog();
 
-        final String requestBody = Uri.encode("game\":\"" + mGameNumber +
+        Log.d(TAG, "Input data: " + answer);
+
+        final String requestBody = Uri.encode("\"game\":\"" + mGameNumber +
                 "\",\"Key\":\"" + getUid(db) +
                 "\",\"CP\":\"" + mIdTxtView.getText() +
                 "\",\"Answer\":\"" + answer + "\"",
                 ALLOWED_URI_CHARS);
         final String requestURL = String.format(URL_SEND_ANSWER, requestBody);
+
+        Log.d(TAG, "URL: " + requestURL);
 
         JsonObjectRequest sendAnswerRequest = new JsonObjectRequest(Request.Method.GET,
                 requestURL, null,

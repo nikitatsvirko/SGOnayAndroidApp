@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/task_cost_txt"
         android:layout_margin="5dp"
-        android:padding="10dp"
+        android:padding="5dp"
         android:textColor="@android:color/black"
         android:textSize="17sp" />
 
@@ -47,12 +47,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/task_description_txt"
         android:layout_margin="5dp"
-        android:padding="10dp"
+        android:padding="5dp"
         android:textColor="@android:color/black"
         android:textStyle="bold|italic" />
 
     <EditText
         android:id="@+id/task_answer_txt"
+        style="@android:style/Widget.Holo.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/task_text_txt"
@@ -62,7 +63,8 @@
         android:maxLines="@integer/max_lines_text"
         android:minLines="@integer/min_lines_text"
         android:padding="10dp"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:selectAllOnFocus="false" />
 
     <Button
         android:id="@+id/submit_btn"
