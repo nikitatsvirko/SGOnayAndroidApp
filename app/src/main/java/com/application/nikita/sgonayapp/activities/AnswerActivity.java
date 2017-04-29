@@ -65,7 +65,7 @@ public class AnswerActivity extends AppCompatActivity {
     }
 
     public void onSubmitClicked(View view) {
-        String answer = mAnswer.getText().toString().trim();
+        String answer = mAnswer.getText().toString().trim().replaceAll("#|&|\"", " ");
 
         if (!answer.isEmpty()) {
             sendAnswer(answer);
