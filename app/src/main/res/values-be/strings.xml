@@ -3,7 +3,7 @@
     <string name="empty_forms">Калі ласка, увядзіце назву каманды і пароль</string>
     <string name="button_sign_in">Уваход</string>
     <string name="button_answer">Пацвердзіць</string>
-    <string name="answer_false_txt">" Магчыма вы фінішавалі або час скончыўся"</string>
+    <string name="answer_false_txt">Магчыма вы фінішавалі або час скончыўся</string>
     <string name="app_name">SGOnay</string>
     <string name="exit_text">Выйсці</string>
     <string name="finish_txt">Фінішаваць</string>
