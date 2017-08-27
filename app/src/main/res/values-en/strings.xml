@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SGOnay</string>
+    <string name="answer_false_txt">Maybe you finished or the time ran out</string>
+    <string name="button_answer">Confirm</string>
+    <string name="button_sign_in">Sign In</string>
+    <string name="exit_text">Enter the command name and password</string>
+    <string name="finish_txt">Finish the game</string>
+    <string name="image_content">SGOnay logo</string>
+    <string name="loading_txt">Loading...</string>
+    <string name="minutes_text">min. %1s</string>
+    <string name="prompt_password">Password</string>
+    <string name="sgonay_text">SGOnay#%1s</string>
+    <string name="signup_text"><a href="http://sgonay.96.lt/registration.php">No account? Create new</a></string>
+    <string name="start_game_title">Are you sure you want to start in the game?</string>
+    <string name="start_text">Yes</string>
+    <string name="title_activity_games">Available games</string>
+    <string name="title_activity_login">Sign In</string>
+    <string name="title_activity_tasks">Tasks</string>
+    <string name="title_answer">Answer</string>
+    <string name="waiting_games_text">Games loading...</string>
+    <string name="waiting_sending_answers_text">Sending answer...</string>
+    <string name="waiting_tasks_text">Tasks loading...</string>
+    <string name="waiting_text">Wait please...</string>
+    <string name="wrong_credentials">Wrong data!</string>
+    <string name="start_game_message">" Are you sure you want to start in the game?"</string>
+    <string name="prompt_login">Team name</string>
+    <string name="prompt_answer">Answer</string>
+    <string name="points_text">Points:</string>
+    <string name="not_logged_in">You are not signe in</string>
+    <string name="no_answer">You did not enter the answer!</string>
+    <string name="empty_forms">Enter team name and password</string>
+</resources>

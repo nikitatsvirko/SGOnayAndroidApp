@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="empty_forms">Калі ласка, увядзіце назву каманды і пароль</string>
+    <string name="button_sign_in">Уваход</string>
+    <string name="button_answer">Пацвердзіць</string>
+    <string name="answer_false_txt">" Магчыма вы фінішавалі або час скончыўся"</string>
+    <string name="app_name">SGOnay</string>
+    <string name="exit_text">Выйсці</string>
+    <string name="finish_txt">Фінішаваць</string>
+    <string name="image_content">SGOnay лагатып</string>
+    <string name="loading_txt">Загрузка...</string>
+    <string name="minutes_text">хв. %1s</string>
+    <string name="no_answer">Вы не ўвялі адказ!</string>
+    <string name="not_logged_in">Вы не ўвайшлі ў сістэму</string>
+    <string name="points_text">Ачкі:</string>
+    <string name="prompt_answer">Адказ</string>
+    <string name="prompt_login">Назва каманды</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="sgonay_text">SGOnay#%1s</string>
+    <string name="signup_text"><a href="http://sgonay.96.lt/registration.php">Няма акаўнта? Стварыць новы</a></string>
+    <string name="start_game_message">Вы ўпэўненыя, што жадаеце стартаваць у гульні?</string>
+    <string name="start_game_title">Старт</string>
+    <string name="start_text">Так</string>
+    <string name="title_activity_games">Даступныя гульні</string>
+    <string name="title_activity_login">Уваход</string>
+    <string name="title_activity_tasks">Заданні</string>
+    <string name="title_answer">Адказ</string>
+    <string name="waiting_games_text">Загрузка гульняў...</string>
+    <string name="waiting_sending_answers_text">Адпраўка адказу...</string>
+    <string name="waiting_tasks_text">Загрузка заданняў...</string>
+    <string name="waiting_text">Чакайце ...</string>
+    <string name="wrong_credentials">Няслушныя дадзеныя!</string>
+</resources>

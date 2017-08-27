@@ -13,13 +13,12 @@
     <string name="button_answer">Подтвердить</string>
     <string name="title_answer">Ответ</string>
     <string name="signup_text"><a href="http://sgonay.96.lt/registration.php">Нет аккаунта? Создать новый</a></string>
-    <string name="image_content">SGOnay logo</string>
+    <string name="image_content">SGOnay логотип</string>
     <string name="exit_text">Выйти</string>
     <string name="waiting_text">Ожидайте...</string>
     <string name="waiting_tasks_text">Загрузка заданий...</string>
     <string name="finish_txt">Финишировать</string>
     <string name="loading_txt">Загрузка...</string>
-    <string name="refresh">Обновить</string>
     <string name="no_answer">Вы не ввели ответ!</string>
     <string name="waiting_games_text">Загрузка игр...</string>
     <string name="waiting_sending_answers_text">Отправка ответа...</string>
@@ -28,6 +27,6 @@
     <string name="start_text">Да</string>
     <string name="start_game_title">Старт</string>
     <string name="points_text">Очки: </string>
-    <string name="sgonay_text">SGOnay$%1s</string>
+    <string name="sgonay_text">SGOnay#%1s</string>
     <string name="minutes_text">мин. %1s</string>
 </resources>
