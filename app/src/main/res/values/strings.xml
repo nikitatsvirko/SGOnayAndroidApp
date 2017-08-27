@@ -28,4 +28,6 @@
     <string name="start_text">Да</string>
     <string name="start_game_title">Старт</string>
     <string name="points_text">Очки: </string>
+    <string name="sgonay_text">SGOnay$%1s</string>
+    <string name="minutes_text">мин. %1s</string>
 </resources>

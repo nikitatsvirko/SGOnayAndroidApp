@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:padding="4dp"
     android:contentDescription="@string/image_content">
 
     <TextView
-        android:id="@+id/gameName"
+        android:id="@+id/game_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -16,49 +17,46 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/gameTitle"
+        android:id="@+id/game_title_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/gameName"
-        android:layout_margin="5dp"
-        android:padding="5dp"
+        android:layout_toEndOf="@id/game_name_text_view"
+        android:padding="8dp"
         android:gravity="start"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
     <ImageView
-        android:id="@+id/gameImage"
+        android:id="@+id/game_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/gameName"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="5dp"
+        android:layout_below="@id/game_name_text_view"
+        android:paddingBottom="4dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
         android:contentDescription="@string/image_content"
-        android:padding="5dp"
         android:src="@mipmap/ic_launcher" />
 
     <TextView
-        android:id="@+id/gameDate"
+        android:id="@+id/game_date_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/gameImage"
-        android:layout_below="@id/gameTitle"
+        android:layout_toEndOf="@id/game_image_view"
+        android:layout_below="@id/game_title_text_view"
         android:gravity="end"
-        android:layout_margin="5dp"
-        android:padding="5dp"
+        android:padding="8dp"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
 
     <TextView
-        android:id="@+id/gameTimeOut"
+        android:id="@+id/game_time_out_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/gameImage"
-        android:layout_below="@id/gameDate"
+        android:layout_toEndOf="@id/game_image_view"
+        android:layout_below="@id/game_date_text_view"
         android:gravity="end"
-        android:layout_margin="5dp"
-        android:padding="5dp"
+        android:padding="8dp"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 

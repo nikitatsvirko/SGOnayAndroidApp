@@ -1,6 +1,7 @@
 package com.application.nikita.sgonayapp.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.application.nikita.sgonayapp.R;
+import com.application.nikita.sgonayapp.activities.GamesActivity;
 import com.application.nikita.sgonayapp.entities.Game;
 import static com.application.nikita.sgonayapp.app.AppConfig.*;
 
@@ -17,55 +19,76 @@ import java.util.ArrayList;
  * Created by Konstantin on 02.04.2017.
  */
 
-public class GameAdapter extends BaseAdapter {
+public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameHolder> {
 
-    Context context;
-    ArrayList<Game> games;
-    LayoutInflater inflater;
+    public interface OnItemClickListener {
+        void onItemClick(Game game);
+    }
 
-    public GameAdapter(Context context, ArrayList<Game> games){
-        this.context = context;
-        this.games = games;
-        this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    private Context mContext;
+    private ArrayList<Game> mGames;
+    private final OnItemClickListener mListener;
+
+    public GameAdapter(Context context, ArrayList<Game> games, OnItemClickListener listener) {
+        mContext = context;
+        mGames = games;
+        mListener = listener;
     }
 
     @Override
-    public int getCount() {
-        return games.size();
+    public GameHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+        View view = layoutInflater.inflate(R.layout.game_item, parent, false);
+        return new GameHolder(view);
     }
 
     @Override
-    public Object getItem(int position) {
-        return games.get(position);
+    public void onBindViewHolder(GameHolder holder, int position) {
+        Game game = mGames.get(position);
+        holder.bindGame(game, mListener);
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public int getItemCount() {
+        return mGames.size();
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view  = convertView;
-        if (view == null) {
-            view = this.inflater.inflate(R.layout.game_item, parent, false);
+    class GameHolder extends RecyclerView.ViewHolder {
+
+        private TextView mGameNameTextView;
+        private TextView mGameDateTextView;
+        private TextView mGameTimeOutTextView;
+        private TextView mGameTitleTextView;
+
+        private Game mGame;
+
+        public void bindGame(final Game game, final OnItemClickListener listener) {
+            mGame = game;
+            mGameNameTextView.setText(mContext.getResources().getString(R.string.sgonay_text, mGame.getNumber()));
+            mGameDateTextView.setText(mGame.getDate());
+            if (mGame.getScheme().equals("3")) {
+                mGameTimeOutTextView.setText("");
+            } else {
+                mGameTimeOutTextView.setText(mContext.getResources().getString(R.string.minutes_text, mGame.getTimeOut()));
+            }
+            mGameTitleTextView.setText(mGame.getTitle());
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(game);
+                }
+            });
         }
 
-        Game g = getGame(position);
+        public GameHolder(View itemView) {
+            super(itemView);
 
-        ((TextView) view.findViewById(R.id.gameName)).setText(SGONAY_TEXT + g.getNumber());
-        ((TextView) view.findViewById(R.id.gameDate)).setText(g.getDate());
-        if (g.getScheme().equals("3")) {
-            ((TextView) view.findViewById(R.id.gameTimeOut)).setText("");
-        } else {
-            ((TextView) view.findViewById(R.id.gameTimeOut)).setText(g.getTimeOut() + MINUTES_TEXT);
+            mGameNameTextView = (TextView) itemView.findViewById(R.id.game_name_text_view);
+            mGameDateTextView = (TextView) itemView.findViewById(R.id.game_date_text_view);
+            mGameTimeOutTextView = (TextView) itemView.findViewById(R.id.game_time_out_text_view);
+            mGameTitleTextView = (TextView) itemView.findViewById(R.id.game_title_text_view);
         }
-        ((TextView) view.findViewById(R.id.gameTitle)).setText(g.getTitle());
-
-        return view;
-    }
-
-    Game getGame(int position) {
-        return ((Game) getItem(position));
     }
 }
+

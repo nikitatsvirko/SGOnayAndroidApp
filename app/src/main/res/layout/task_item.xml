@@ -2,18 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:padding="20dp">
+    android:padding="8dp">
 
 
     <TextView
-        android:id="@+id/task_id"
+        android:id="@+id/task_id_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/task_description"
-        android:layout_alignTop="@+id/task_description"
+        android:layout_alignBottom="@+id/task_description_text_view"
+        android:layout_alignTop="@+id/task_description_text_view"
         android:gravity="center"
-        android:padding="3dp"
+        android:paddingStart="8dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
         android:text=""
         android:textColor="@android:color/black"
         android:textSize="16sp"
@@ -21,16 +22,16 @@
 
 
     <TextView
-        android:id="@+id/task_description"
+        android:id="@+id/task_description_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_margin="5dp"
-        android:layout_toEndOf="@id/task_id"
+        android:layout_toEndOf="@id/task_id_text_view"
         android:ellipsize="end"
         android:gravity="start|center"
         android:maxLines="3"
-        android:padding="5dp"
+        android:padding="8dp"
         android:text=""
         android:textColor="@android:color/black"
         android:textSize="16sp" />

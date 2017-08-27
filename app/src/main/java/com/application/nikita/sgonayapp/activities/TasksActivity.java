@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,12 +36,11 @@ import static com.application.nikita.sgonayapp.app.AppConfig.*;
 
 public class TasksActivity extends AppCompatActivity {
     private static final String TAG = TasksActivity.class.getSimpleName();
-    private ListView mTasksList;
+    private RecyclerView mTasksRecyclerView;
     private TaskAdapter mAdapter;
     private ArrayList<Task> mTasks = new ArrayList<>();
     private ProgressDialog mProgressDialog;
     private String mGameNumber;
-    private int countOfTasks;
     private SQLiteHandler db;
     private boolean isFinished = false;
 
@@ -49,24 +50,13 @@ public class TasksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tasks);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
-        mTasksList = (ListView) findViewById(R.id.tasks_list);
+
+        mTasksRecyclerView = (RecyclerView) findViewById(R.id.tasks_list);
+        mTasksRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
         db = new SQLiteHandler(getApplicationContext());
         mGameNumber = getIntent().getStringExtra("game_number");
         loadTasks(mGameNumber);
-
-        mTasksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(TasksActivity.this, AnswerActivity.class);
-                intent.putExtra("id",mTasks.get(position).getId());
-                intent.putExtra("price", mTasks.get(position).getCost());
-                intent.putExtra("description",mTasks.get(position).getDescription());
-                intent.putExtra("text",mTasks.get(position).getText());
-                intent.putExtra("scheme", getIntent().getStringExtra("scheme"));
-                intent.putExtra("game_number", getIntent().getStringExtra("game_number"));
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -122,9 +112,7 @@ public class TasksActivity extends AppCompatActivity {
     }
 
     private void putDataToAdapter(JSONArray array) throws JSONException {
-        countOfTasks = array.length();
-
-        for(int i = 0; i < countOfTasks; i++) {
+        for(int i = 0; i < array.length(); i++) {
             JSONObject object = array.getJSONObject(i);
             mTasks.add(new Task(object.getString("Number"),
                     object.getString("Description").replaceAll("(?:<br>)", ""),
@@ -132,8 +120,13 @@ public class TasksActivity extends AppCompatActivity {
                     object.getString("Price")));
         }
 
-        mAdapter = new TaskAdapter(getApplicationContext(), mTasks);
-        mTasksList.setAdapter(mAdapter);
+        mAdapter = new TaskAdapter(getApplicationContext(), mTasks, new TaskAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Task task) {
+                onTaskClicked(task);
+            }
+        });
+        mTasksRecyclerView.setAdapter(mAdapter);
     }
 
     public void finishGame(MenuItem item) {
@@ -185,5 +178,16 @@ public class TasksActivity extends AppCompatActivity {
     public void refreshOnClick(MenuItem item) {
         mTasks.clear();
         loadTasks(mGameNumber);
+    }
+
+    public void onTaskClicked(Task task) {
+        Intent intent = new Intent(TasksActivity.this, AnswerActivity.class);
+        intent.putExtra("id",task.getId());
+        intent.putExtra("price", task.getCost());
+        intent.putExtra("description", task.getDescription());
+        intent.putExtra("text", task.getText());
+        intent.putExtra("scheme", getIntent().getStringExtra("scheme"));
+        intent.putExtra("game_number", getIntent().getStringExtra("game_number"));
+        startActivity(intent);
     }
 }
