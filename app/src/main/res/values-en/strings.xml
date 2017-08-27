@@ -12,7 +12,7 @@
     <string name="prompt_password">Password</string>
     <string name="sgonay_text">SGOnay#%1s</string>
     <string name="signup_text"><a href="http://sgonay.96.lt/registration.php">No account? Create new</a></string>
-    <string name="start_game_title">Are you sure you want to start in the game?</string>
+    <string name="start_game_title">Start</string>
     <string name="start_text">Yes</string>
     <string name="title_activity_games">Available games</string>
     <string name="title_activity_login">Sign In</string>
@@ -23,7 +23,7 @@
     <string name="waiting_tasks_text">Tasks loading...</string>
     <string name="waiting_text">Wait please...</string>
     <string name="wrong_credentials">Wrong data!</string>
-    <string name="start_game_message">" Are you sure you want to start in the game?"</string>
+    <string name="start_game_message">Are you sure you want to start in the game?</string>
     <string name="prompt_login">Team name</string>
     <string name="prompt_answer">Answer</string>
     <string name="points_text">Points:</string>
