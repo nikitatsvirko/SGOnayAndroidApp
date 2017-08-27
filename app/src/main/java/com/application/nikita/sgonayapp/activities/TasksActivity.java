@@ -2,8 +2,10 @@ package com.application.nikita.sgonayapp.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,9 +36,10 @@ import java.util.ArrayList;
 
 import static com.application.nikita.sgonayapp.app.AppConfig.*;
 
-public class TasksActivity extends AppCompatActivity {
+public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = TasksActivity.class.getSimpleName();
     private RecyclerView mTasksRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private TaskAdapter mAdapter;
     private ArrayList<Task> mTasks = new ArrayList<>();
     private ProgressDialog mProgressDialog;
@@ -54,9 +57,13 @@ public class TasksActivity extends AppCompatActivity {
         mTasksRecyclerView = (RecyclerView) findViewById(R.id.tasks_list);
         mTasksRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_tasks_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeColors(Color.RED);
+
         db = new SQLiteHandler(getApplicationContext());
         mGameNumber = getIntent().getStringExtra("game_number");
-        loadTasks(mGameNumber);
+        loadTasks();
     }
 
     @Override
@@ -66,10 +73,38 @@ public class TasksActivity extends AppCompatActivity {
         return true;
     }
 
-    public void loadTasks(String number) {
+    @Override
+    public void onBackPressed() {}
+
+    @Override
+    public void onRefresh() {
+        mTasks.clear();
+        loadTasks(mGameNumber);
+        updateTasks();
+    }
+
+    public void onTaskClicked(Task task) {
+        Intent intent = new Intent(TasksActivity.this, AnswerActivity.class);
+        intent.putExtra("id",task.getId());
+        intent.putExtra("price", task.getCost());
+        intent.putExtra("description", task.getDescription());
+        intent.putExtra("text", task.getText());
+        intent.putExtra("scheme", getIntent().getStringExtra("scheme"));
+        intent.putExtra("game_number", getIntent().getStringExtra("game_number"));
+        startActivity(intent);
+    }
+
+    private void updateTasks() {
+        loadTasks(mGameNumber);
+    }
+
+    private void loadTasks() {
         mProgressDialog.setMessage(getString(R.string.waiting_tasks_text));
         showDialog();
+        loadTasks(mGameNumber);
+    }
 
+    public void loadTasks(String number) {
         final String requestBody = Uri.encode("\"game\":\"" + number + "\"", ALLOWED_URI_CHARS);
         final String requestURL = String.format(URL_GET_TASKS, requestBody);
 
@@ -88,7 +123,7 @@ public class TasksActivity extends AppCompatActivity {
                         }
 
                         hideDialog();
-
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -170,24 +205,5 @@ public class TasksActivity extends AppCompatActivity {
             finish();
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onBackPressed() {}
-
-    public void refreshOnClick(MenuItem item) {
-        mTasks.clear();
-        loadTasks(mGameNumber);
-    }
-
-    public void onTaskClicked(Task task) {
-        Intent intent = new Intent(TasksActivity.this, AnswerActivity.class);
-        intent.putExtra("id",task.getId());
-        intent.putExtra("price", task.getCost());
-        intent.putExtra("description", task.getDescription());
-        intent.putExtra("text", task.getText());
-        intent.putExtra("scheme", getIntent().getStringExtra("scheme"));
-        intent.putExtra("game_number", getIntent().getStringExtra("game_number"));
-        startActivity(intent);
     }
 }

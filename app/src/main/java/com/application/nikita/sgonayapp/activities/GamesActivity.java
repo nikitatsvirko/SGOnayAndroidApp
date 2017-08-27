@@ -3,8 +3,10 @@ package com.application.nikita.sgonayapp.activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.application.nikita.sgonayapp.R;
 import com.application.nikita.sgonayapp.adapters.GameAdapter;
 import com.application.nikita.sgonayapp.app.AppController;
@@ -48,9 +51,10 @@ import static com.application.nikita.sgonayapp.app.AppConfig.getUid;
  * Created by Nikita on 07.03.2017.
  */
 
-public class GamesActivity extends AppCompatActivity {
+public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = GamesActivity.class.getSimpleName();
     private RecyclerView mGamesRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private GameAdapter mAdapter;
     private SessionManager mSession;
     private SQLiteHandler db;
@@ -70,10 +74,14 @@ public class GamesActivity extends AppCompatActivity {
         mGamesRecyclerView = (RecyclerView) findViewById(R.id.games_list_recycler_view);
         mGamesRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_games_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeColors(Color.RED);
+
         mSession = new SessionManager(getApplicationContext());
         db = new SQLiteHandler(getApplicationContext());
 
-        loadGames();
+        loadGames(true);
     }
 
     @Override
@@ -81,6 +89,22 @@ public class GamesActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_game, menu);
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        mGames.clear();
+        loadGames(false);
+    }
+
+    private void loadGames(boolean isFirstTime) {
+        if (isFirstTime) {
+            mProgressDialog.setMessage(getString(R.string.waiting_games_text));
+            showDialog();
+            loadGames();
+        } else  {
+            loadGames();
+        }
     }
 
     public void logOut(MenuItem item) {
@@ -97,14 +121,8 @@ public class GamesActivity extends AppCompatActivity {
     }
 
     public void loadGames() {
-        mProgressDialog.setMessage(getString(R.string.waiting_games_text));
-        showDialog();
-
-
-        final String requestURL = URL_GET_GAMES;
-
         JsonObjectRequest tasksRequest = new JsonObjectRequest(Request.Method.GET,
-                requestURL, null,
+                URL_GET_GAMES, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -118,7 +136,7 @@ public class GamesActivity extends AppCompatActivity {
                         }
 
                         hideDialog();
-
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -141,6 +159,7 @@ public class GamesActivity extends AppCompatActivity {
             mProgressDialog.dismiss();
     }
 
+
     private void putDataToAdapter(JSONArray array) throws JSONException {
 
         for(int i = 0; i < array.length(); i++) {
@@ -159,11 +178,6 @@ public class GamesActivity extends AppCompatActivity {
             }
         });
         mGamesRecyclerView.setAdapter(mAdapter);
-    }
-
-    public void refreshOnClick(MenuItem item) {
-        mGames.clear();
-        loadGames();
     }
 
     public void showStartDialog(final Game game) {
@@ -190,9 +204,6 @@ public class GamesActivity extends AppCompatActivity {
     }
 
     public void startGame(String mGameNumber) {
-        mProgressDialog.setMessage(getString(R.string.loading_txt));
-        showDialog();
-
         final String requestBody = Uri.encode("\"game\":\"" + mGameNumber + "\",\"Key\":\"" + getUid(db) + "\"", ALLOWED_URI_CHARS);
         final String requestURL = String.format(URL_START_GAME, requestBody);
         Log.d(TAG, "URL: " + requestURL);
@@ -211,7 +222,6 @@ public class GamesActivity extends AppCompatActivity {
                         }
 
                         hideDialog();
-
                     }
                 }, new Response.ErrorListener() {
             @Override
