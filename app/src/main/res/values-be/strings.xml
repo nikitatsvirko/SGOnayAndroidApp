@@ -12,7 +12,7 @@
     <string name="minutes_text">хв. %1s</string>
     <string name="no_answer">Вы не ўвялі адказ!</string>
     <string name="not_logged_in">Вы не ўвайшлі ў сістэму</string>
-    <string name="points_text">Ачкі:</string>
+    <string name="points_text">Ачкі: %1s</string>
     <string name="prompt_answer">Адказ</string>
     <string name="prompt_login">Назва каманды</string>
     <string name="prompt_password">Пароль</string>
@@ -30,4 +30,5 @@
     <string name="waiting_tasks_text">Загрузка заданняў...</string>
     <string name="waiting_text">Чакайце ...</string>
     <string name="wrong_credentials">Няслушныя дадзеныя!</string>
+    <string name="signed_in_text">Вы ўвайшлі!</string>
 </resources>

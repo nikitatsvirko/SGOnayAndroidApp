@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -38,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordText;
     private Button mSignInButton;
     private TextView mSignUpTextView;
-    private ProgressDialog mProgressDialog;
     private SessionManager mSession;
     private SQLiteHandler db;
 
@@ -54,9 +54,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mSignUpTextView.setClickable(true);
         mSignUpTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(false);
 
         db = new SQLiteHandler(getApplicationContext());
 
@@ -82,9 +79,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkLogin(final String team, final String password) {
-        mProgressDialog.setMessage(getString(R.string.waiting_text));
-        showDialog();
-
         final String requestBody = Uri.encode("\"Login\":\"" + team + "\"," +
                 "\"Password\":\"" + password + "\"", ALLOWED_URI_CHARS);
         final String requestURL = String.format(URL_LOGIN, requestBody);
@@ -94,13 +88,12 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        hideDialog();
-
                         try {
                             JSONObject responseObject = response.getJSONObject(RESPONSE_STRING);
                             String retParameter = responseObject.getString(RETURN_PARAMETER_STRING);
 
                             setUserLoggedIn(retParameter, team);
+                            Toast.makeText(getApplicationContext(), R.string.signed_in_text, Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d(TAG, "JSON error: " + e.getMessage());
@@ -111,21 +104,10 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             VolleyLog.d(TAG, "Error: " + error.getMessage());
-                            hideDialog();
                         }
                 });
 
         AppController.getInstance().addToRequestQueue(jsonObjectRequest);
-    }
-
-    private void showDialog() {
-        if (!mProgressDialog.isShowing())
-            mProgressDialog.show();
-    }
-
-    private void hideDialog() {
-        if (mProgressDialog.isShowing())
-            mProgressDialog.dismiss();
     }
 
     private void setUserLoggedIn(String retParameter, String team) {

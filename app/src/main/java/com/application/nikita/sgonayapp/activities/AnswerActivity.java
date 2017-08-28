@@ -43,25 +43,18 @@ public class AnswerActivity extends AppCompatActivity {
     private String mGameNumber;
     private SQLiteHandler db;
     private EditText mAnswer;
-    private ProgressDialog mProgressDialog;
     private String isOk;
 
     @Override
     public void onCreate(Bundle onSavedInstantState) {
         super.onCreate(onSavedInstantState);
         setContentView(R.layout.activity_answer);
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(false);
-        mIdTxtView = (TextView)findViewById(R.id.task_id_txt);
-        mPriceTxtView = (TextView)findViewById(R.id.task_cost_txt);
-        mDescriptionTxtView = (TextView)findViewById(R.id.task_description_txt);
-        mTextTxtView = (TextView)findViewById(R.id.task_text_txt);
-        mAnswer = (EditText)findViewById(R.id.task_answer_txt);
+
         db = new SQLiteHandler(getApplicationContext());
 
         mGameNumber = getIntent().getStringExtra("game_number");
         mScheme = getIntent().getStringExtra("scheme");
-        showFields();
+        setUpUI();
     }
 
     public void onSubmitClicked(View view) {
@@ -75,7 +68,13 @@ public class AnswerActivity extends AppCompatActivity {
         }
     }
 
-    public void showFields() {
+    public void setUpUI() {
+        mIdTxtView = (TextView)findViewById(R.id.task_id_txt);
+        mPriceTxtView = (TextView)findViewById(R.id.task_cost_txt);
+        mDescriptionTxtView = (TextView)findViewById(R.id.task_description_txt);
+        mTextTxtView = (TextView)findViewById(R.id.task_text_txt);
+        mAnswer = (EditText)findViewById(R.id.task_answer_txt);
+
         switch (mScheme) {
             case "3":
                 mIdTxtView.setText(getIntent().getStringExtra("id"));
@@ -84,7 +83,7 @@ public class AnswerActivity extends AppCompatActivity {
                 break;
             case "2":
                 mIdTxtView.setText(getIntent().getStringExtra("id"));
-                mPriceTxtView.setText(getString(R.string.points_text) + getIntent().getStringExtra("price"));
+                mPriceTxtView.setText(getString(R.string.points_text, getIntent().getStringExtra("price")));
                 mDescriptionTxtView.setText(getIntent().getStringExtra("description").replaceAll("(?:<br>)", ""));
                 mTextTxtView.setText(getIntent().getStringExtra("text"));
                 break;
@@ -118,9 +117,6 @@ public class AnswerActivity extends AppCompatActivity {
     }
 
     public void sendAnswer(String answer) {
-        mProgressDialog.setMessage(getString(R.string.waiting_sending_answers_text));
-        showDialog();
-
         Log.d(TAG, "Input data: " + answer);
 
         final String requestBody = Uri.encode("\"game\":\"" + mGameNumber +
@@ -150,28 +146,14 @@ public class AnswerActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        hideDialog();
-
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
-                hideDialog();
             }
         });
 
         AppController.getInstance().addToRequestQueue(sendAnswerRequest);
-    }
-
-    private void showDialog() {
-        if (!mProgressDialog.isShowing())
-            mProgressDialog.show();
-    }
-
-    private void hideDialog() {
-        if (mProgressDialog.isShowing())
-            mProgressDialog.dismiss();
     }
 }

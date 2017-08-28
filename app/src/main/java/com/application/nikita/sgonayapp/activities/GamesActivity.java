@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -68,11 +69,17 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
         super.onCreate(onSavedInstantState);
         setContentView(R.layout.activity_games);
 
-        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(GamesActivity.this);
         mProgressDialog.setCancelable(false);
-
         mGamesRecyclerView = (RecyclerView) findViewById(R.id.games_list_recycler_view);
         mGamesRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mAdapter = new GameAdapter(getApplicationContext(), mGames, new GameAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Game game) {
+                showStartDialog(game);
+            }
+        });
+        mGamesRecyclerView.setAdapter(mAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_games_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -171,13 +178,7 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
                     object.getString("Scheme")));
         }
 
-        mAdapter = new GameAdapter(getApplicationContext(), mGames, new GameAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Game game) {
-                showStartDialog(game);
-            }
-        });
-        mGamesRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
     public void showStartDialog(final Game game) {
@@ -216,18 +217,14 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
                         try {
                             JSONObject responseObject = response.getJSONObject(RESPONSE_STRING);
                             isStarted = responseObject.getBoolean(RETURN_PARAMETER_STRING);
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        hideDialog();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
-                hideDialog();
             }
         });
 
