@@ -86,7 +86,7 @@ public class AnswerActivity extends AppCompatActivity {
 
         if (!mTask.getImageUrl().equals(EMPTY_STRING)) {
             mImage.setVisibility(View.VISIBLE);
-            AppController.getInstance().loadImage(mImage, BASE_URL + mTask.getImageUrl());
+            AppController.getInstance().loadImage(mImage, mTask.getImageUrl());
         }
 
         switch (mScheme) {

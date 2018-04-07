@@ -42,7 +42,7 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
     private RecyclerView mTasksRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TaskAdapter mAdapter;
-    private ArrayList<Task> mTasks = new ArrayList<>();
+    private ArrayList<Task> mTasks;
     private ProgressDialog mProgressDialog;
     private String mGameNumber;
     private String mScheme;
@@ -79,7 +79,6 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
 
     @Override
     public void onRefresh() {
-        mTasks.clear();
         loadTasks(mGameNumber);
         updateTasks();
     }
@@ -151,6 +150,7 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
     }
 
     private void putDataToAdapter(JSONArray array) throws JSONException {
+        mTasks = new ArrayList<>();
         for(int i = 0; i < array.length(); i++) {
             JSONObject object = array.getJSONObject(i);
             mTasks.add(new Task(object.getString("Number"),
