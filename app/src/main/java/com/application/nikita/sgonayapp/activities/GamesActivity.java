@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -15,11 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -27,12 +21,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.application.nikita.sgonayapp.R;
 import com.application.nikita.sgonayapp.adapters.GameAdapter;
 import com.application.nikita.sgonayapp.app.AppController;
 import com.application.nikita.sgonayapp.entities.Game;
-import com.application.nikita.sgonayapp.helper.SQLiteHandler;
 import com.application.nikita.sgonayapp.helper.SessionManager;
 
 import org.json.JSONArray;
@@ -41,16 +33,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.application.nikita.sgonayapp.app.AppConfig.ALLOWED_URI_CHARS;
-import static com.application.nikita.sgonayapp.app.AppConfig.RESPONSE_STRING;
-import static com.application.nikita.sgonayapp.app.AppConfig.RETURN_PARAMETER_STRING;
-import static com.application.nikita.sgonayapp.app.AppConfig.URL_GET_GAMES;
-import static com.application.nikita.sgonayapp.app.AppConfig.URL_START_GAME;
-import static com.application.nikita.sgonayapp.app.AppConfig.getUid;
-
-/**
- * Created by Nikita on 07.03.2017.
- */
+import static com.application.nikita.sgonayapp.utils.Common.getStartGameRequestUrl;
+import static com.application.nikita.sgonayapp.utils.Constants.GAME_NUMBER;
+import static com.application.nikita.sgonayapp.utils.Constants.RESPONSE_STRING;
+import static com.application.nikita.sgonayapp.utils.Constants.RETURN_PARAMETER_STRING;
+import static com.application.nikita.sgonayapp.utils.Constants.SCHEME;
+import static com.application.nikita.sgonayapp.utils.Constants.URL_GET_GAMES;
 
 public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = GamesActivity.class.getSimpleName();
@@ -58,7 +46,6 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private GameAdapter mAdapter;
     private SessionManager mSession;
-    private SQLiteHandler db;
     private ProgressDialog mProgressDialog;
 
     private ArrayList<Game> mGames = new ArrayList<>();
@@ -86,7 +73,6 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
         mSwipeRefreshLayout.setColorSchemeColors(Color.RED);
 
         mSession = new SessionManager(getApplicationContext());
-        db = new SQLiteHandler(getApplicationContext());
 
         loadGames(true);
     }
@@ -117,7 +103,7 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
     public void logOut(MenuItem item) {
         if (mSession.isLoggedIn()) {
             mSession.setLogin(false);
-            db.deleteUsers();
+            AppController.getInstance().getDb().deleteUsers();
 
             Intent intent = new Intent(GamesActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -168,7 +154,6 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
 
 
     private void putDataToAdapter(JSONArray array) throws JSONException {
-
         for(int i = 0; i < array.length(); i++) {
             JSONObject object = array.getJSONObject(i);
             mGames.add(new Game(object.getString("Number"),
@@ -190,12 +175,8 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startGame(game.getNumber());
+                        startGame(game.getNumber(), game.getScheme());
 
-                        Intent intent = new Intent(GamesActivity.this, TasksActivity.class);
-                        intent.putExtra("game_number", game.getNumber());
-                        intent.putExtra("scheme", game.getScheme());
-                        startActivity(intent);
                         dialog.cancel();
                     }
                 });
@@ -204,9 +185,8 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
         alert.show();
     }
 
-    public void startGame(String mGameNumber) {
-        final String requestBody = Uri.encode("\"game\":\"" + mGameNumber + "\",\"Key\":\"" + getUid(db) + "\"", ALLOWED_URI_CHARS);
-        final String requestURL = String.format(URL_START_GAME, requestBody);
+    public void startGame(final String mGameNumber, final String scheme) {
+        final String requestURL = getStartGameRequestUrl(mGameNumber);
         Log.d(TAG, "URL: " + requestURL);
 
         JsonObjectRequest tasksRequest = new JsonObjectRequest(Request.Method.GET,
@@ -217,6 +197,8 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
                         try {
                             JSONObject responseObject = response.getJSONObject(RESPONSE_STRING);
                             isStarted = responseObject.getBoolean(RETURN_PARAMETER_STRING);
+                            startTasksActivity(isStarted, mGameNumber, scheme);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -229,5 +211,16 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
         });
 
         AppController.getInstance().addToRequestQueue(tasksRequest);
+    }
+
+    private void startTasksActivity(boolean isStarted, String mGameNumber, String scheme) {
+        if (isStarted) {
+            Intent intent = new Intent(GamesActivity.this, TasksActivity.class);
+            intent.putExtra(GAME_NUMBER, mGameNumber);
+            intent.putExtra(SCHEME, scheme);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Упс", Toast.LENGTH_LONG).show();
+        }
     }
 }

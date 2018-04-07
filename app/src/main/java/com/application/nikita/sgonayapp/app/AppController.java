@@ -2,20 +2,20 @@ package com.application.nikita.sgonayapp.app;
 
 import android.app.Application;
 import android.text.TextUtils;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-
-/**
- * Created by niktia on 16.4.17.
- */
+import com.application.nikita.sgonayapp.helper.SQLiteHandler;
+import com.squareup.picasso.Picasso;
 
 public class AppController extends Application {
 
     public static final String TAG = AppController.class.getSimpleName();
 
     private RequestQueue mRequestQueue;
+    private SQLiteHandler db;
 
     private static AppController mInstance;
 
@@ -23,6 +23,7 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        db = new SQLiteHandler(getApplicationContext());
     }
 
     public static synchronized AppController getInstance() {
@@ -51,5 +52,15 @@ public class AppController extends Application {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
         }
+    }
+
+    public SQLiteHandler getDb() {
+        return this.db;
+    }
+
+    public void loadImage(ImageView view, String Url) {
+        Picasso.get()
+                .load(Url)
+                .into(view);
     }
 }

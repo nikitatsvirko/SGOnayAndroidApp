@@ -1,9 +1,5 @@
 package com.application.nikita.sgonayapp.entities;
 
-/**
- * Created by Konstantin on 02.04.2017.
- */
-
 public class Game {
     private String mNumber;
     private String mTitle;

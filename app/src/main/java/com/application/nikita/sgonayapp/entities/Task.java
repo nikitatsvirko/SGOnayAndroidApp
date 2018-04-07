@@ -1,16 +1,16 @@
 package com.application.nikita.sgonayapp.entities;
 
-/**
- * Created by Konstantin on 02.04.2017.
- */
+import java.io.Serializable;
 
-public class Task {
+import static com.application.nikita.sgonayapp.utils.Constants.EMPTY_STRING;
+
+public class Task implements Serializable {
 
     private String id;
     private String description;
     private String text;
     private String cost;
-    private int image;
+    private String imageUrl = EMPTY_STRING;
 
     public Task(String id, String description, String text){
         this.id = id;
@@ -19,16 +19,17 @@ public class Task {
         this.cost = "";
     }
 
-    public Task(String id, String description, String text, String cost){
+    public Task(String id, String description, String text, String cost, String imgUrl){
         this.id = id;
         this.description = description;
         this.text = text;
         this.cost = cost;
+        this.imageUrl = imgUrl;
     }
 
-    public int getImage() {
+    public String getImageUrl() {
 
-        return image;
+        return imageUrl;
     }
 
     public String getText() {

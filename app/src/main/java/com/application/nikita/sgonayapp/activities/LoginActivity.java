@@ -28,6 +28,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.application.nikita.sgonayapp.app.AppConfig.*;
+import static com.application.nikita.sgonayapp.utils.Constants.ALLOWED_URI_CHARS;
+import static com.application.nikita.sgonayapp.utils.Constants.RESPONSE_STRING;
+import static com.application.nikita.sgonayapp.utils.Constants.RETURN_PARAMETER_STRING;
+import static com.application.nikita.sgonayapp.utils.Constants.URL_LOGIN;
 
 /**
  * Created by Nikita on 06.03.2017.
@@ -40,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button mSignInButton;
     private TextView mSignUpTextView;
     private SessionManager mSession;
-    private SQLiteHandler db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,8 +57,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mSignUpTextView.setClickable(true);
         mSignUpTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
-        db = new SQLiteHandler(getApplicationContext());
 
         mSession = new SessionManager(getApplicationContext());
 
@@ -115,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
 
             mSession.setLogin(true);
 
-            db.addUser(team, retParameter);
+            AppController.getInstance().getDb().addUser(team, retParameter);
 
             Intent intent = new Intent(LoginActivity.this, GamesActivity.class);
             startActivity(intent);

@@ -1,12 +1,11 @@
 package com.application.nikita.sgonayapp.activities;
 
-import android.app.ProgressDialog;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,20 +16,19 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.application.nikita.sgonayapp.R;
 import com.application.nikita.sgonayapp.app.AppController;
-import com.application.nikita.sgonayapp.helper.SQLiteHandler;
+import com.application.nikita.sgonayapp.entities.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.application.nikita.sgonayapp.app.AppConfig.ALLOWED_URI_CHARS;
-import static com.application.nikita.sgonayapp.app.AppConfig.RESPONSE_STRING;
-import static com.application.nikita.sgonayapp.app.AppConfig.RETURN_PARAMETER_STRING;
-import static com.application.nikita.sgonayapp.app.AppConfig.URL_SEND_ANSWER;
-import static com.application.nikita.sgonayapp.app.AppConfig.getUid;
-
-/**
- * Created by Konstantin on 02.04.2017.
- */
+import static com.application.nikita.sgonayapp.utils.Common.getSendAnswerRequestUrl;
+import static com.application.nikita.sgonayapp.utils.Constants.BASE_URL;
+import static com.application.nikita.sgonayapp.utils.Constants.EMPTY_STRING;
+import static com.application.nikita.sgonayapp.utils.Constants.GAME_NUMBER;
+import static com.application.nikita.sgonayapp.utils.Constants.RESPONSE_STRING;
+import static com.application.nikita.sgonayapp.utils.Constants.RETURN_PARAMETER_STRING;
+import static com.application.nikita.sgonayapp.utils.Constants.SCHEME;
+import static com.application.nikita.sgonayapp.utils.Constants.TASK_EXTRA;
 
 public class AnswerActivity extends AppCompatActivity {
 
@@ -39,22 +37,32 @@ public class AnswerActivity extends AppCompatActivity {
     private TextView mDescriptionTxtView;
     private TextView mTextTxtView;
     private TextView mPriceTxtView;
+    private ImageView mImage;
+    private EditText mAnswer;
     private String mScheme;
     private String mGameNumber;
-    private SQLiteHandler db;
-    private EditText mAnswer;
+    private Task mTask;
     private String isOk;
+
+    private final String SCHEME_ONE = "1";
+    private final String SCHEME_TWO = "2";
+    private final String SCHEME_THREE = "3";
 
     @Override
     public void onCreate(Bundle onSavedInstantState) {
         super.onCreate(onSavedInstantState);
         setContentView(R.layout.activity_answer);
 
-        db = new SQLiteHandler(getApplicationContext());
-
-        mGameNumber = getIntent().getStringExtra("game_number");
-        mScheme = getIntent().getStringExtra("scheme");
+        getIntentExtra();
         setUpUI();
+    }
+
+    private void getIntentExtra() {
+        mGameNumber = getIntent().getStringExtra(GAME_NUMBER);
+        mScheme = getIntent().getStringExtra(SCHEME);
+        if (getIntent().getExtras() != null) {
+            mTask = (Task) getIntent().getExtras().getSerializable(TASK_EXTRA);
+        }
     }
 
     public void onSubmitClicked(View view) {
@@ -73,45 +81,51 @@ public class AnswerActivity extends AppCompatActivity {
         mPriceTxtView = (TextView)findViewById(R.id.task_cost_txt);
         mDescriptionTxtView = (TextView)findViewById(R.id.task_description_txt);
         mTextTxtView = (TextView)findViewById(R.id.task_text_txt);
-        mAnswer = (EditText)findViewById(R.id.task_answer_txt);
+        mAnswer = (EditText) findViewById(R.id.task_answer_txt);
+        mImage = (ImageView) findViewById(R.id.task_image);
+
+        if (!mTask.getImageUrl().equals(EMPTY_STRING)) {
+            mImage.setVisibility(View.VISIBLE);
+            AppController.getInstance().loadImage(mImage, BASE_URL + mTask.getImageUrl());
+        }
 
         switch (mScheme) {
-            case "3":
-                mIdTxtView.setText(getIntent().getStringExtra("id"));
-                mDescriptionTxtView.setText(getIntent().getStringExtra("description").replaceAll("(?:<br>)", ""));
-                mTextTxtView.setText(getIntent().getStringExtra("text"));
+            case SCHEME_THREE:
+                mIdTxtView.setText(mTask.getId());
+                mDescriptionTxtView.setText(mTask.getDescription().replaceAll("(?:<br>)", ""));
+                mTextTxtView.setText(mTask.getText());
                 break;
-            case "2":
-                mIdTxtView.setText(getIntent().getStringExtra("id"));
-                mPriceTxtView.setText(getString(R.string.points_text, getIntent().getStringExtra("price")));
-                mDescriptionTxtView.setText(getIntent().getStringExtra("description").replaceAll("(?:<br>)", ""));
-                mTextTxtView.setText(getIntent().getStringExtra("text"));
+            case SCHEME_TWO:
+                mIdTxtView.setText(mTask.getId());
+                mPriceTxtView.setText(getString(R.string.points_text, mTask.getCost()));
+                mDescriptionTxtView.setText(mTask.getDescription().replaceAll("(?:<br>)", ""));
+                mTextTxtView.setText(mTask.getText());
                 break;
-            case "1":
-                int mPrice = Integer.parseInt(getIntent().getStringExtra("price"));
+            case SCHEME_ONE:
+                int mPrice = Integer.parseInt(mTask.getCost());
                 if (mPrice == 0) {
-                    mIdTxtView.setText(getIntent().getStringExtra("id"));
-                    mDescriptionTxtView.setText(getIntent().getStringExtra("description").replaceAll("(?:<br>)", ""));
-                    mTextTxtView.setText(getIntent().getStringExtra("text"));
+                    mIdTxtView.setText(mTask.getId());
+                    mDescriptionTxtView.setText(mTask.getDescription().replaceAll("(?:<br>)", ""));
+                    mTextTxtView.setText(mTask.getText());
                 }
                 if (mPrice > 0) {
-                    mIdTxtView.setText(getIntent().getStringExtra("id"));
+                    mIdTxtView.setText(mTask.getId());
                     mPriceTxtView.setText("Штраф за пропуск: " + mPrice + " мин.");
-                    mDescriptionTxtView.setText(getIntent().getStringExtra("description").replaceAll("(?:<br>)", ""));
-                    mTextTxtView.setText(getIntent().getStringExtra("text"));
+                    mDescriptionTxtView.setText(mTask.getDescription().replaceAll("(?:<br>)", ""));
+                    mTextTxtView.setText(mTask.getText());
                 }
                 if (mPrice < 0) {
-                    mIdTxtView.setText(getIntent().getStringExtra("id"));
+                    mIdTxtView.setText(mTask.getId());
                     mPriceTxtView.setText("Бонус: " + Math.abs(mPrice) + " мин.");
-                    mDescriptionTxtView.setText(getIntent().getStringExtra("description").replaceAll("(?:<br>)", ""));
-                    mTextTxtView.setText(getIntent().getStringExtra("text"));
+                    mDescriptionTxtView.setText(mTask.getDescription().replaceAll("(?:<br>)", ""));
+                    mTextTxtView.setText(mTask.getText());
                 }
                 break;
             default:
-                mIdTxtView.setText(getIntent().getStringExtra("id"));
-                mPriceTxtView.setText(getIntent().getStringExtra("price"));
-                mDescriptionTxtView.setText(getIntent().getStringExtra("description").replaceAll("(?:<br>)", ""));
-                mTextTxtView.setText(getIntent().getStringExtra("text"));
+                mIdTxtView.setText(mTask.getId());
+                mPriceTxtView.setText(mTask.getCost());
+                mDescriptionTxtView.setText(mTask.getDescription().replaceAll("(?:<br>)", ""));
+                mTextTxtView.setText(mTask.getText());
                 break;
         }
     }
@@ -119,12 +133,7 @@ public class AnswerActivity extends AppCompatActivity {
     public void sendAnswer(String answer) {
         Log.d(TAG, "Input data: " + answer);
 
-        final String requestBody = Uri.encode("\"game\":\"" + mGameNumber +
-                "\",\"Key\":\"" + getUid(db) +
-                "\",\"CP\":\"" + mIdTxtView.getText() +
-                "\",\"Answer\":\"" + answer + "\"",
-                ALLOWED_URI_CHARS);
-        final String requestURL = String.format(URL_SEND_ANSWER, requestBody);
+        final String requestURL = getSendAnswerRequestUrl(answer, mGameNumber, String.valueOf(mIdTxtView.getText()));
 
         Log.d(TAG, "URL: " + requestURL);
 

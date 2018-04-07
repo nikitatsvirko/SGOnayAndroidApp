@@ -3,7 +3,6 @@ package com.application.nikita.sgonayapp.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -26,7 +22,6 @@ import com.application.nikita.sgonayapp.R;
 import com.application.nikita.sgonayapp.adapters.TaskAdapter;
 import com.application.nikita.sgonayapp.app.AppController;
 import com.application.nikita.sgonayapp.entities.Task;
-import com.application.nikita.sgonayapp.helper.SQLiteHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +29,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.application.nikita.sgonayapp.app.AppConfig.*;
+import static com.application.nikita.sgonayapp.utils.Common.getFinisRequestUrl;
+import static com.application.nikita.sgonayapp.utils.Common.getTasksRequest;
+import static com.application.nikita.sgonayapp.utils.Constants.GAME_NUMBER;
+import static com.application.nikita.sgonayapp.utils.Constants.RESPONSE_STRING;
+import static com.application.nikita.sgonayapp.utils.Constants.RETURN_PARAMETER_STRING;
+import static com.application.nikita.sgonayapp.utils.Constants.SCHEME;
+import static com.application.nikita.sgonayapp.utils.Constants.TASK_EXTRA;
 
 public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = TasksActivity.class.getSimpleName();
@@ -44,7 +45,7 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
     private ArrayList<Task> mTasks = new ArrayList<>();
     private ProgressDialog mProgressDialog;
     private String mGameNumber;
-    private SQLiteHandler db;
+    private String mScheme;
     private boolean isFinished = false;
 
     @Override
@@ -61,8 +62,8 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeColors(Color.RED);
 
-        db = new SQLiteHandler(getApplicationContext());
-        mGameNumber = getIntent().getStringExtra("game_number");
+        mGameNumber = getIntent().getStringExtra(GAME_NUMBER);
+        mScheme = getIntent().getStringExtra(SCHEME);
         loadTasks();
     }
 
@@ -84,13 +85,13 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
     }
 
     public void onTaskClicked(Task task) {
+        Bundle extra = new Bundle();
+        extra.putSerializable(TASK_EXTRA, task);
+
         Intent intent = new Intent(TasksActivity.this, AnswerActivity.class);
-        intent.putExtra("id",task.getId());
-        intent.putExtra("price", task.getCost());
-        intent.putExtra("description", task.getDescription());
-        intent.putExtra("text", task.getText());
-        intent.putExtra("scheme", getIntent().getStringExtra("scheme"));
-        intent.putExtra("game_number", getIntent().getStringExtra("game_number"));
+        intent.putExtras(extra);
+        intent.putExtra(SCHEME, mScheme);
+        intent.putExtra(GAME_NUMBER, mGameNumber);
         startActivity(intent);
     }
 
@@ -99,14 +100,12 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
     }
 
     private void loadTasks() {
-        mProgressDialog.setMessage(getString(R.string.waiting_tasks_text));
-        showDialog();
+        showDialog(getString(R.string.waiting_tasks_text));
         loadTasks(mGameNumber);
     }
 
     public void loadTasks(String number) {
-        final String requestBody = Uri.encode("\"game\":\"" + number + "\"", ALLOWED_URI_CHARS);
-        final String requestURL = String.format(URL_GET_TASKS, requestBody);
+        final String requestURL = getTasksRequest(number);
 
         JsonObjectRequest tasksRequest = new JsonObjectRequest(Request.Method.GET,
                 requestURL, null,
@@ -136,6 +135,11 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
         AppController.getInstance().addToRequestQueue(tasksRequest);
     }
 
+    private void showDialog(String message) {
+        mProgressDialog.setMessage(message);
+        showDialog();
+    }
+
     private void showDialog() {
         if (!mProgressDialog.isShowing())
             mProgressDialog.show();
@@ -152,7 +156,8 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
             mTasks.add(new Task(object.getString("Number"),
                     object.getString("Description").replaceAll("(?:<br>)", ""),
                     object.getString("Task"),
-                    object.getString("Price")));
+                    object.getString("Price"),
+                    object.getString("IMG")));
         }
 
         mAdapter = new TaskAdapter(getApplicationContext(), mTasks, new TaskAdapter.OnItemClickListener() {
@@ -165,11 +170,9 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
     }
 
     public void finishGame(MenuItem item) {
-        mProgressDialog.setMessage(getString(R.string.loading_txt));
-        showDialog();
+        showDialog(getString(R.string.loading_txt));
 
-        final String requestBody = Uri.encode("\"game\":\"" + mGameNumber + "\",\"Key\":\"" + getUid(db) + "\"", ALLOWED_URI_CHARS);
-        final String requestURL = String.format(URL_FINISH, requestBody);
+        final String requestURL = getFinisRequestUrl(mGameNumber);
         Log.d(TAG, "URL: " + requestURL);
 
         JsonObjectRequest tasksRequest = new JsonObjectRequest(Request.Method.GET,
