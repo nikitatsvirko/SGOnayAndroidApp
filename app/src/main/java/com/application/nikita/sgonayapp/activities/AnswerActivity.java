@@ -18,6 +18,9 @@ import com.application.nikita.sgonayapp.R;
 import com.application.nikita.sgonayapp.app.AppController;
 import com.application.nikita.sgonayapp.entities.Task;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,9 +55,27 @@ public class AnswerActivity extends AppCompatActivity {
     public void onCreate(Bundle onSavedInstantState) {
         super.onCreate(onSavedInstantState);
         setContentView(R.layout.activity_answer);
-
+        checkForUpdates();
         getIntentExtra();
         setUpUI();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkForCrashes();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterManagers();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterManagers();
     }
 
     private void getIntentExtra() {
@@ -164,5 +185,18 @@ public class AnswerActivity extends AppCompatActivity {
         });
 
         AppController.getInstance().addToRequestQueue(sendAnswerRequest);
+    }
+
+    private void checkForCrashes() {
+        CrashManager.register(this);
+    }
+
+    private void checkForUpdates() {
+        // Remove this for store builds!
+        UpdateManager.register(this);
+    }
+
+    private void unregisterManagers() {
+        UpdateManager.unregister();
     }
 }

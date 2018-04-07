@@ -27,6 +27,9 @@ import com.application.nikita.sgonayapp.app.AppController;
 import com.application.nikita.sgonayapp.entities.Game;
 import com.application.nikita.sgonayapp.helper.SessionManager;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,7 +58,7 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
     public void onCreate(Bundle onSavedInstantState) {
         super.onCreate(onSavedInstantState);
         setContentView(R.layout.activity_games);
-
+        checkForUpdates();
         mProgressDialog = new ProgressDialog(GamesActivity.this);
         mProgressDialog.setCancelable(false);
         mGamesRecyclerView = (RecyclerView) findViewById(R.id.games_list_recycler_view);
@@ -75,6 +78,24 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
         mSession = new SessionManager(getApplicationContext());
 
         loadGames(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkForCrashes();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterManagers();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterManagers();
     }
 
     @Override
@@ -222,5 +243,18 @@ public class GamesActivity extends AppCompatActivity implements SwipeRefreshLayo
         } else {
             Toast.makeText(this, "Упс", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void checkForCrashes() {
+        CrashManager.register(this);
+    }
+
+    private void checkForUpdates() {
+        // Remove this for store builds!
+        UpdateManager.register(this);
+    }
+
+    private void unregisterManagers() {
+        UpdateManager.unregister();
     }
 }

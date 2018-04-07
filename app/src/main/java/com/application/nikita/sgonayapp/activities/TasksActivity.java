@@ -23,6 +23,9 @@ import com.application.nikita.sgonayapp.adapters.TaskAdapter;
 import com.application.nikita.sgonayapp.app.AppController;
 import com.application.nikita.sgonayapp.entities.Task;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +55,7 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+        checkForUpdates();
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
 
@@ -65,6 +69,24 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
         mGameNumber = getIntent().getStringExtra(GAME_NUMBER);
         mScheme = getIntent().getStringExtra(SCHEME);
         loadTasks();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkForCrashes();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterManagers();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterManagers();
     }
 
     @Override
@@ -208,5 +230,18 @@ public class TasksActivity extends AppCompatActivity implements SwipeRefreshLayo
             finish();
             super.onBackPressed();
         }
+    }
+
+    private void checkForCrashes() {
+        CrashManager.register(this);
+    }
+
+    private void checkForUpdates() {
+        // Remove this for store builds!
+        UpdateManager.register(this);
+    }
+
+    private void unregisterManagers() {
+        UpdateManager.unregister();
     }
 }

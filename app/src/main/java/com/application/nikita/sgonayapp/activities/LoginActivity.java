@@ -24,6 +24,9 @@ import com.application.nikita.sgonayapp.app.AppController;
 import com.application.nikita.sgonayapp.helper.SQLiteHandler;
 import com.application.nikita.sgonayapp.helper.SessionManager;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().setTitle(R.string.title_activity_login);
+        checkForUpdates();
         mLoginText = (EditText)findViewById(R.id.login_text);
         mPasswordText = (EditText) findViewById(R.id.password_text);
         mSignInButton = (Button) findViewById(R.id.signin_button);
@@ -65,6 +69,24 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkForCrashes();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterManagers();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterManagers();
     }
 
     public void logIn(View view) {
@@ -126,4 +148,18 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         }
     }
+
+    private void checkForCrashes() {
+        CrashManager.register(this);
+    }
+
+    private void checkForUpdates() {
+        // Remove this for store builds!
+        UpdateManager.register(this);
+    }
+
+    private void unregisterManagers() {
+        UpdateManager.unregister();
+    }
+
 }
