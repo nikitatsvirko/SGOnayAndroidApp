@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.application.nikita.sgonayapp.R;
 import com.application.nikita.sgonayapp.app.AppController;
 import com.application.nikita.sgonayapp.entities.Task;
+import com.application.nikita.sgonayapp.popup.PhotoFullPopupWindow;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
@@ -104,6 +105,13 @@ public class AnswerActivity extends AppCompatActivity {
         mTextTxtView = (TextView)findViewById(R.id.task_text_txt);
         mAnswer = (EditText) findViewById(R.id.task_answer_txt);
         mImage = (ImageView) findViewById(R.id.task_image);
+        mImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new PhotoFullPopupWindow(getApplicationContext(), R.layout.popup_photo_full, view, mTask.getImageUrl(), null);
+
+            }
+        });
 
         if (!mTask.getImageUrl().equals(EMPTY_STRING)) {
             mImage.setVisibility(View.VISIBLE);

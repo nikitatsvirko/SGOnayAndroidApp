@@ -8,7 +8,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.application.nikita.sgonayapp.helper.SQLiteHandler;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 public class AppController extends Application {
 
@@ -59,7 +59,7 @@ public class AppController extends Application {
     }
 
     public void loadImage(ImageView view, String Url) {
-        Picasso.get()
+        Glide.with(getApplicationContext())
                 .load(Url)
                 .into(view);
     }
