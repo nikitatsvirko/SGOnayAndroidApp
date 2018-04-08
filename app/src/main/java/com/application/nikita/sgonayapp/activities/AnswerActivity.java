@@ -26,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.application.nikita.sgonayapp.utils.Common.getSendAnswerRequestUrl;
-import static com.application.nikita.sgonayapp.utils.Constants.BASE_URL;
 import static com.application.nikita.sgonayapp.utils.Constants.EMPTY_STRING;
 import static com.application.nikita.sgonayapp.utils.Constants.GAME_NUMBER;
 import static com.application.nikita.sgonayapp.utils.Constants.RESPONSE_STRING;
@@ -115,7 +114,7 @@ public class AnswerActivity extends AppCompatActivity {
 
         if (!mTask.getImageUrl().equals(EMPTY_STRING)) {
             mImage.setVisibility(View.VISIBLE);
-            AppController.getInstance().loadImage(mImage, mTask.getImageUrl());
+            AppController.getInstance().loadImageIntoView(mImage, mTask.getImageUrl());
         }
 
         switch (mScheme) {

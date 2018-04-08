@@ -58,7 +58,7 @@ public class AppController extends Application {
         return this.db;
     }
 
-    public void loadImage(ImageView view, String Url) {
+    public void loadImageIntoView(ImageView view, String Url) {
         Glide.with(getApplicationContext())
                 .load(Url)
                 .into(view);

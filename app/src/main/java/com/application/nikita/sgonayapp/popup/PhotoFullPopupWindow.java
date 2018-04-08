@@ -17,10 +17,9 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 
 import com.application.nikita.sgonayapp.R;
-import com.application.nikita.sgonayapp.utils.Constants;
+import com.application.nikita.sgonayapp.utils.BitmapUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -71,7 +70,7 @@ public class PhotoFullPopupWindow extends PopupWindow {
         if (bitmap != null) {
             loading.setVisibility(View.GONE);
             if (Build.VERSION.SDK_INT >= 16) {
-                parent.setBackground(new BitmapDrawable(mContext.getResources(), Constants.fastblur(Bitmap.createScaledBitmap(bitmap, 50, 50, true))));
+                parent.setBackground(new BitmapDrawable(mContext.getResources(), BitmapUtils.fastblur(Bitmap.createScaledBitmap(bitmap, 50, 50, true))));
             } else {
                 onPalette(Palette.from(bitmap).generate());
 
@@ -95,7 +94,7 @@ public class PhotoFullPopupWindow extends PopupWindow {
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                             if (Build.VERSION.SDK_INT >= 16) {
                                 parent.setBackground(new BitmapDrawable(mContext.getResources(),
-                                        Constants.fastblur(Bitmap.createScaledBitmap(resource, 50, 50, true))));
+                                        BitmapUtils.fastblur(Bitmap.createScaledBitmap(resource, 50, 50, true))));
                             } else {
                                 onPalette(Palette.from(resource).generate());
 
