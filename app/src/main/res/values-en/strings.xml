@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">SGOnayApp</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_tasks">Tasks</string>
+    <string name="title_activity_games">Available games</string>
+    <string name="empty_forms">Enter team name and password</string>
+    <string name="wrong_credentials">Wrong data!</string>
+    <string name="not_logged_in">You are not logged in.</string>
+    <string name="prompt_login">Team name</string>
+    <string name="prompt_password">Password</string>
+    <string name="button_sign_in">Login</string>
+    <string name="prompt_answer">Answer</string>
+    <string name="button_answer">Confirm</string>
+    <string name="title_answer">Answer</string>
+    <string name="signup_text"><a href="http://sgonay.96.lt/registration.php">No account? Create new</a></string>
+    <string name="image_content">SGOnay logo</string>
+    <string name="exit_text">Exit</string>
+    <string name="waiting_text">Wait...</string>
+    <string name="waiting_tasks_text">Task download...</string>
+    <string name="finish_txt">Finish</string>
+    <string name="loading_txt">Download...</string>
+</resources>
